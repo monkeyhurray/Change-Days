@@ -1,0 +1,181 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
+
+export type Database = {
+  public: {
+    Tables: {
+      ChallengeList: {
+        Row: {
+          created_at: string;
+          etc: string | null;
+          frequency: string | null;
+          id: number;
+          initialDate: string | null;
+          name: string | null;
+          period: string | null;
+          photo: string | null;
+          public: boolean | null;
+          vaildTime: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          etc?: string | null;
+          frequency?: string | null;
+          id?: number;
+          initialDate?: string | null;
+          name?: string | null;
+          period?: string | null;
+          photo?: string | null;
+          public?: boolean | null;
+          vaildTime?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          etc?: string | null;
+          frequency?: string | null;
+          id?: number;
+          initialDate?: string | null;
+          name?: string | null;
+          period?: string | null;
+          photo?: string | null;
+          public?: boolean | null;
+          vaildTime?: string | null;
+        };
+        Relationships: [];
+      };
+      user: {
+        Row: {
+          challengeList: string | null;
+          createdAt: string;
+          doneList: string | null;
+          failedList: string | null;
+          id: number;
+          nickname: string | null;
+          ongoingList: string | null;
+          password: string;
+          profile: string | null;
+        };
+        Insert: {
+          challengeList?: string | null;
+          createdAt?: string;
+          doneList?: string | null;
+          failedList?: string | null;
+          id?: number;
+          nickname?: string | null;
+          ongoingList?: string | null;
+          password: string;
+          profile?: string | null;
+        };
+        Update: {
+          challengeList?: string | null;
+          createdAt?: string;
+          doneList?: string | null;
+          failedList?: string | null;
+          id?: number;
+          nickname?: string | null;
+          ongoingList?: string | null;
+          password?: string;
+          profile?: string | null;
+        };
+        Relationships: [];
+      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
+};
+
+export type Tables<
+  PublicTableNameOrOptions extends
+    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
+    : never = never
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R;
+    }
+    ? R
+    : never
+  : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
+      Database["public"]["Views"])
+  ? (Database["public"]["Tables"] &
+      Database["public"]["Views"])[PublicTableNameOrOptions] extends {
+      Row: infer R;
+    }
+    ? R
+    : never
+  : never;
+
+export type TablesInsert<
+  PublicTableNameOrOptions extends
+    | keyof Database["public"]["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I;
+    }
+    ? I
+    : never
+  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
+  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+      Insert: infer I;
+    }
+    ? I
+    : never
+  : never;
+
+export type TablesUpdate<
+  PublicTableNameOrOptions extends
+    | keyof Database["public"]["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U;
+    }
+    ? U
+    : never
+  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
+  ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
+      Update: infer U;
+    }
+    ? U
+    : never
+  : never;
+
+export type Enums<
+  PublicEnumNameOrOptions extends
+    | keyof Database["public"]["Enums"]
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+    : never = never
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
+  ? Database["public"]["Enums"][PublicEnumNameOrOptions]
+  : never;
