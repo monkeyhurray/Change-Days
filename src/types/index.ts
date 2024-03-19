@@ -4,3 +4,8 @@ export type Todo = {
   contents: string;
   isDone: boolean;
 };
+
+export interface infiniteTodo {
+  id: string;
+  title: string;
+}
