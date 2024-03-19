@@ -1,5 +1,10 @@
 type FrequencyIds = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
+type Days = {
+  id: number;
+  name: string;
+};
+
 type FrequencyChallenge = {
   id: FrequencyIds;
   certificationDays: string;
@@ -11,6 +16,16 @@ type PeriodChallenge = {
   id: FrequencyIds;
   value: string;
 };
+
+const days: Days[] = [
+  { id: 1, name: "월" },
+  { id: 2, name: "화" },
+  { id: 3, name: "수" },
+  { id: 4, name: "목" },
+  { id: 5, name: "금" },
+  { id: 6, name: "토" },
+  { id: 7, name: "일" },
+];
 
 const frequencyArr: FrequencyChallenge[] = [
   {
@@ -64,15 +79,17 @@ const periodArr: PeriodChallenge[] = [
 
 let date = new Date().toLocaleDateString();
 
-// export const oneWeek = () => {
-//   let today = Date.parse(date);
-//   let result = [];
-//   result.push(date);
-//   for (let i = 0; i < 6; i++) {
-//     today += 86400000;
-//     result.push(new Date(today).toLocaleDateString());
-//   }
-//   return result;
-// };
+const useOneWeek = () => {
+  let today = Date.parse(date);
+  let result = [];
+  result.push(date);
+  console.log(today);
+  for (let i = 0; i < 6; i++) {
+    today += 86400000;
+    result.push(new Date(today).toLocaleDateString());
+  }
 
-export { frequencyArr, periodArr };
+  return result;
+};
+
+export { frequencyArr, periodArr, useOneWeek, days };
