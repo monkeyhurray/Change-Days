@@ -2,17 +2,17 @@ import { supabase } from "@/supabase/supabase";
 import React from "react";
 
 const PersonalPage = async () => {
-  let { data: ChallengeList, error } = await supabase
-    .from("ChallengeList")
+  const { data: challenges, error } = await supabase
+    .from("challenges")
     .select("*");
 
-  let { data: user, error: userError } = await supabase
+  const { data: user, error: userError } = await supabase
     .from("user")
     .select("*");
 
-  console.log(ChallengeList);
+  console.log("challenges 목록", challenges);
 
-  console.log(user);
+  console.log("userData", user);
 
   if (error) {
     return <>now Loading. . .</>;
@@ -24,10 +24,15 @@ const PersonalPage = async () => {
 
   return (
     <div>
-      {ChallengeList?.map((item) => {
+      {challenges?.map((item) => {
         return <div key={item.id}>{item.initialDate}</div>;
       })}
-      <p>1234567</p>
+      <p>텍스트입니다</p>
+      <div>
+        {user.map((item) => {
+          return <div key={item.id}>{item.nickname}</div>;
+        })}
+      </div>
     </div>
   );
 };
