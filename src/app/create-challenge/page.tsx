@@ -3,10 +3,12 @@
 import {
   frequencyArr,
   periodArr,
+  useOneWeek,
+  days,
 } from "@/components/createChallenge/createCalendar";
 import CreateChallengeBar from "@/components/common/Create-ChallengeBar";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { useCreateMutation } from "@/components/hooks/useChallengeMutation";
 type FrequencyIds = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
@@ -31,19 +33,15 @@ const CreateChallengePage = () => {
 
   const postChallengeMutation = useCreateMutation();
 
-  let date = new Date().toLocaleDateString();
+  function getDayOfWeek() {
+    const dayOfWeek = new Date().getDay();
 
-  const oneWeek = () => {
-    let today = Date.parse(date);
-    let result = [];
-    result.push(date);
-    for (let i = 0; i < 6; i++) {
-      today += 86400000;
-      result.push(new Date(today).toLocaleDateString());
-    }
-    return result;
-  };
-  const toUseOneWeek = oneWeek();
+    //0:일, 1:월, 2:화, 3:수, 4:목, 5:금, 6:토
+    return dayOfWeek;
+  }
+  console.log(getDayOfWeek());
+
+  const toUseOneWeek = useOneWeek();
   console.log(toUseOneWeek);
   const frequencyFunc = (id: FrequencyIds) => {
     const frequencyArrFilter = frequencyArr.find(
@@ -135,7 +133,7 @@ const CreateChallengePage = () => {
           <h1>시작일:&nbsp;</h1>
 
           {toUseOneWeek.map((day, idx) => {
-            return <button key={idx}>{day.slice(6)}()</button>;
+            return <button key={idx}>{day.slice(6)} ()</button>;
           })}
         </div>
         <div>
