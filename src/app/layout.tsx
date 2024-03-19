@@ -19,6 +19,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={inter.className}>
         <Link href={'/sign/signup'}>회원가입</Link>
+        &nbsp;<Link href={'/sign/signin'}>로그인</Link>
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
