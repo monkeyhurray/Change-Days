@@ -4,6 +4,7 @@ import "./globals.css";
 import QueryProvider from "./provider";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import Link from "next/link";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
