@@ -1,7 +1,8 @@
 import MainSlider from "@/components/common/MainSlider";
 import Image from "next/image";
 import Link from "next/link";
-
+import { IoIosSearch } from "react-icons/io";
+import { FaPlus } from "react-icons/fa6";
 export default function Home() {
   const challenges = [
     {
@@ -49,21 +50,30 @@ export default function Home() {
   ];
   return (
     <>
-      <section className="h-96 flex items-center justify-center bg-orange-400">
+      <section className="h-96 flex items-center justify-center bg-gray-200">
         <div className="">
-          <p className="text-3xl mb-5">습관 바꾸고 갓생 살자!!</p>
-          <input
-            type="text"
-            className="px-5 py-3"
-            placeholder="챌린지를 검색해 주세요"
-          ></input>
-          <input type="button" className="cursor-pointer" value="클릭"></input>
+          <p className="text-3xl mb-5 text-center">습관 바꾸고 갓생 살자!!</p>
+          <div className="flex">
+            <input
+              type="text"
+              className="px-5 py-3 w-80"
+              placeholder="챌린지를 검색해 주세요"
+            ></input>
+            <button className="bg-white text-gray-500 px-3">
+              <IoIosSearch size={30} color="inherit" />
+            </button>
+          </div>
         </div>
       </section>
       <section className="mt-20">
         <div className="flex justify-between">
           <h1 className="mb-10 text-2xl">진행중인 챌린지</h1>
-          <p className="text-xl">+ 챌린지 개설하기</p>
+          <p className="text-xl flex items-center">
+            <span className="mr-2">
+              <FaPlus />
+            </span>
+            <span>챌린지 개설하기</span>
+          </p>
         </div>
 
         <MainSlider items={challenges} />
