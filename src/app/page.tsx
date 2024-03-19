@@ -1,3 +1,7 @@
+
+import Image from 'next/image';
+
 export default function Home() {
-  return <>1234</>;
+  return <main>Home Page</main>;
+
 }
