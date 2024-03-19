@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "./provider";
+import Header from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
+import Link from "next/link";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <QueryProvider>
-          {children}
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryProvider>
+        <div className="max-w-7xl mx-auto">
+          <Header></Header>
+          <QueryProvider>
+            {children}
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryProvider>
+          <Footer></Footer>
+        </div>
       </body>
     </html>
   );
