@@ -4,13 +4,15 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { supabase } from "@/supabase/supabase";
 import { useInView } from "react-intersection-observer";
 import ChallengeCard from "@/components/ChallengeCard";
+import useSearchStore from "@/store/store";
 
 const SearchPage = () => {
   const [searchItem, setSearchItem] = useState("");
   const { ref, inView } = useInView();
   const [searchClicked, setSearchClicked] = useState(false);
   const [debouncedSearchItem, setDebouncedSearchItem] = useState("");
-
+  const { searchText } = useSearchStore((state) => state);
+  console.log("searchText", searchText);
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setDebouncedSearchItem(searchItem);
@@ -21,14 +23,17 @@ const SearchPage = () => {
 
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery({
-      queryKey: ["challenges", searchClicked ? "all" : debouncedSearchItem],
+      queryKey: ["challenges", debouncedSearchItem],
       queryFn: async ({ pageParam }) => {
         let supabaseData = supabase
           .from("challenges")
           .select("*")
-          .order("createdAt");
-        if (!searchClicked) {
+          .order("created_at");
+        if (searchClicked === false) {
           supabaseData = supabaseData.ilike("name", `%${searchItem}%`);
+        }
+        if (searchText) {
+          supabaseData = supabaseData.ilike("name", `%${searchText}%`);
         }
         const { data, error } = await supabaseData.range(
           (pageParam - 1) * 10,
@@ -44,7 +49,7 @@ const SearchPage = () => {
       initialPageParam: 1,
       getNextPageParam: (lastPage) => lastPage.nextPage,
     });
-
+  console.log("data", data);
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
@@ -55,10 +60,10 @@ const SearchPage = () => {
     setSearchItem(event.target.value);
   };
 
-  const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setSearchClicked(true);
-  };
+  // const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   setSearchClicked(true);
+  // };
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -66,18 +71,19 @@ const SearchPage = () => {
       behavior: "smooth",
     });
   };
-
+  console.log("searchClicked", searchClicked);
   return (
     <div className="bg-white flex justify-center min-h-full py-16">
       <div className="max-w-md text-center">
         <form
           className="flex items-center justify-center mb-8"
-          onSubmit={handleSearchSubmit}
+          // onSubmit={handleSearchSubmit}
         >
           <input
             type="text"
             placeholder="검색어를 입력하세요"
             value={searchItem}
+            // value={searchText}
             onChange={handleSearchChange}
             className="px-4 py-2 mr-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
           />
