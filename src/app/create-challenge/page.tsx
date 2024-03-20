@@ -80,8 +80,11 @@ const CreateChallengePage = () => {
 
     const imageFile = e.target.files[0];
     const reader = new FileReader();
+    console.log(imageFile);
+    console.log(reader);
 
     reader.onload = (event: ProgressEvent<FileReader>) => {
+      console.log(event.target?.result);
       if (!event || !event.target) return;
       if (typeof event.target.result !== "string" || !fileRef.current) return;
 

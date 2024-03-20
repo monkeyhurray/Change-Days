@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
 
 const UploadImg = () => {
+  const fileRef = useRef<HTMLImageElement>(null);
+  // const fileRef = useRef() as LegacyRef<HTMLImageElement> | undefined;
   const [falseImg, setFalseImg] = useState(null);
-  const fileRef = useRef<HTMLInputElement>(null);
-
   const handleChang = () => {};
 
   const readFalseImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,6 +13,8 @@ const UploadImg = () => {
     const reader = new FileReader();
 
     reader.onload = (event: ProgressEvent<FileReader>) => {
+      if (!fileRef) return;
+
       if (!event || !event.target) return;
       if (typeof event.target.result !== "string" || !fileRef.current) return;
 
@@ -21,7 +23,7 @@ const UploadImg = () => {
 
     reader.readAsDataURL(imageFile);
   };
-  console.log(falseImg);
+
   return (
     <form>
       <div className="px-4 py-6">
@@ -33,6 +35,7 @@ const UploadImg = () => {
             <></>
           ) : (
             <img
+              ref={fileRef}
               src={falseImg}
               className="max-h-48 rounded-lg mx-auto"
               alt="Image preview"
