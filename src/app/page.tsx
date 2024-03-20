@@ -3,8 +3,6 @@ import { FaPlus } from "react-icons/fa6";
 import { supabase } from "@/supabase/supabase";
 import { Tables } from "@/types/supabase";
 import Search from "@/components/home/Search";
-import CustomModal from "@/components/common/CustomModal";
-import UploadModal from "@/components/common/UploadModal";
 export type ChallengeListRow = Tables<"challenges">;
 export default async function Home() {
   const { data, error } = await supabase

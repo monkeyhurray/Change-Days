@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 
-import type { Todo, infiniteTodo } from "@/types";
+import type { infiniteTodo } from "@/types";
 import TodoCard from "@/components/TodoCard";
 
 const SearchPage = () => {
