@@ -1,68 +1,20 @@
 import MainSlider from "@/components/common/MainSlider";
-import Image from "next/image";
-import Link from "next/link";
-import { IoIosSearch } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
-export default function Home() {
-  const challenges = [
-    {
-      name: "1만보씩 걷기",
-      id: 1,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-    {
-      name: "매일 7시 기상",
-      id: 2,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-    {
-      name: "매일 7시 기상",
-      id: 2,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-    {
-      name: "매일 7시 기상",
-      id: 2,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-    {
-      name: "매일 7시 기상",
-      id: 2,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-    {
-      name: "매일 7시 기상",
-      id: 2,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-  ];
+import { supabase } from "@/supabase/supabase";
+import { Tables } from "@/types/supabase";
+import Search from "@/components/home/Search";
+export type ChallengeListRow = Tables<"challenges">;
+export default async function Home() {
+  const { data, error } = await supabase
+    .from<any, ChallengeListRow>("challenges")
+    .select("*");
+  //console.log("data", data);
   return (
     <>
       <section className="h-96 flex items-center justify-center bg-gray-200">
         <div className="">
           <p className="text-3xl mb-5 text-center">습관 바꾸고 갓생 살자!!</p>
-          <div className="flex">
-            <input
-              type="text"
-              className="px-5 py-3 w-80"
-              placeholder="챌린지를 검색해 주세요"
-            ></input>
-            <button className="bg-white text-gray-500 px-3">
-              <IoIosSearch size={30} color="inherit" />
-            </button>
-          </div>
+          <Search />
         </div>
       </section>
       <section className="mt-20">
@@ -75,8 +27,7 @@ export default function Home() {
             <span>챌린지 개설하기</span>
           </p>
         </div>
-
-        <MainSlider items={challenges} />
+        <MainSlider items={data} />
       </section>
     </>
   );
