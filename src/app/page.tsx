@@ -3,7 +3,7 @@ import { FaPlus } from "react-icons/fa6";
 import { supabase } from "@/supabase/supabase";
 import { Tables } from "@/types/supabase";
 import Search from "@/components/home/Search";
-export type ChallengeListRow = Tables<"ChallengeList">;
+export type ChallengeListRow = Tables<"challenges">;
 export default async function Home() {
   const { data, error } = await supabase
     .from<any, ChallengeListRow>("challenges")
@@ -27,7 +27,6 @@ export default async function Home() {
             <span>챌린지 개설하기</span>
           </p>
         </div>
-
         <MainSlider items={data} />
       </section>
     </>
