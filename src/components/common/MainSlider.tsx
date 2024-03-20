@@ -41,8 +41,12 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
             <p className="text-m mb-1">{item.name}</p>
             <p className="text-xl mb-1">{item.name}</p>
             <p>
-              <span>{item.period}</span>
-              <span>{item.frequency}</span>
+              <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
+                {item.period}
+              </span>
+              <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
+                {item.frequency}
+              </span>
             </p>
           </Link>
         </SwiperSlide>

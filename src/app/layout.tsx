@@ -5,6 +5,7 @@ import QueryProvider from "./provider";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import Link from "next/link";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,7 +23,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="max-w-7xl mx-auto">
           <Header></Header>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            {children}
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryProvider>
           <Footer></Footer>
         </div>
       </body>
