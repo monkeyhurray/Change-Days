@@ -38,12 +38,15 @@ const CreateChallengePage = () => {
   const [startDate, setStartDate] = useState("");
   const [startToday, setStartToday] = useState("");
   const [monthWeek, setMonthWeek] = useState(9);
+
   const [exampleFalseImg, setExampleFalseImg] = useState(
     "https://newsimg-hams.hankookilbo.com/2023/06/09/3a4636e2-63f3-4aba-af1e-8f08e469f12d.jpg"
   );
+
   const [exampleTrueImg, setExampleTrueImg] = useState(
     "https://image.news1.kr/system/photos/2022/3/21/5278974/article.jpg/dims/optimize"
   );
+
   const [img, setImg] = useState("");
 
   const postChallengeMutation = useCreateMutation();
@@ -79,15 +82,18 @@ const CreateChallengePage = () => {
 
     const imageFile = e.target.files[0];
     const reader = new FileReader();
+    console.log(imageFile);
+    console.log(reader);
 
     reader.onload = (event: ProgressEvent<FileReader>) => {
+      console.log(event.target?.result);
       if (!event || !event.target) return;
       if (typeof event.target.result !== "string" || !imgFalseRef.current)
         return;
 
       imgFalseRef.current.src = event.target.result as string;
     };
-
+    console.log(imgFalseRef);
     reader.readAsDataURL(imageFile);
   };
 
@@ -107,6 +113,7 @@ const CreateChallengePage = () => {
 
     reader.readAsDataURL(imageFile);
   };
+
   const createChallengeBtn = () => {
     setTitle("");
     setTextAreaAuthorize("");
@@ -218,7 +225,6 @@ const CreateChallengePage = () => {
             onChange={(e) => readFalseImage(e)}
             accept="image/*"
           />
-
           <div>
             <img
               ref={imgFalseRef}
@@ -229,7 +235,7 @@ const CreateChallengePage = () => {
             />
           </div>
         </div>
-
+        <label>옳은 예시 사진</label>
         <div>
           <input
             type="file"
