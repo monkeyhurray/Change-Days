@@ -8,6 +8,7 @@ import "swiper/css";
 import React, { PropsWithChildren } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { ChallengeListRow } from "@/app/page";
 type Item = {
   name: string;
   id: number;
@@ -17,7 +18,7 @@ type Item = {
 };
 
 type Props = {
-  items: Item[];
+  items: ChallengeListRow[] | any;
 };
 const MainSlider = ({ items }: PropsWithChildren<Props>) => {
   return (
@@ -27,7 +28,7 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
       onSlideChange={() => console.log("slide change")}
       onSwiper={(swiper) => console.log(swiper)}
     >
-      {items.map((item) => (
+      {items.map((item: ChallengeListRow) => (
         <SwiperSlide key={item.id}>
           <Link href={`/challenge/${item.id}`} className=" bg-blue-100">
             <Image
@@ -37,7 +38,7 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
               width="300"
               height="300"
             />
-            <p className="text-m mb-1">{item.userId}</p>
+            <p className="text-m mb-1">{item.name}</p>
             <p className="text-xl mb-1">{item.name}</p>
             <p>
               <span>{item.period}</span>

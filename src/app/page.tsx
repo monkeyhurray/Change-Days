@@ -3,51 +3,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { IoIosSearch } from "react-icons/io";
 import { FaPlus } from "react-icons/fa6";
-export default function Home() {
-  const challenges = [
-    {
-      name: "1만보씩 걷기",
-      id: 1,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-    {
-      name: "매일 7시 기상",
-      id: 2,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-    {
-      name: "매일 7시 기상",
-      id: 2,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-    {
-      name: "매일 7시 기상",
-      id: 2,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-    {
-      name: "매일 7시 기상",
-      id: 2,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-    {
-      name: "매일 7시 기상",
-      id: 2,
-      userId: "gusal",
-      period: "2주동안",
-      frequency: "주3일",
-    },
-  ];
+import { supabase } from "@/supabase/supabase";
+import { useEffect } from "react";
+import { Tables } from "@/types/supabase";
+export type ChallengeListRow = Tables<"ChallengeList">;
+export default async function Home() {
+  const { data, error } = await supabase
+    .from<any, ChallengeListRow>("challenges")
+    .select("*");
+
+  //console.log("data", data);
   return (
     <>
       <section className="h-96 flex items-center justify-center bg-gray-200">
@@ -76,7 +41,7 @@ export default function Home() {
           </p>
         </div>
 
-        <MainSlider items={challenges} />
+        <MainSlider items={data} />
       </section>
     </>
   );
