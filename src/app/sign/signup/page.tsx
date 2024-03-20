@@ -10,7 +10,7 @@ const SignUpPage = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmitSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
@@ -37,7 +37,7 @@ const SignUpPage = () => {
   return (
     <div>
       <h2>회원가입</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmitSignUp}>
         <div>
           <label htmlFor='email'>Email:</label>
           <input

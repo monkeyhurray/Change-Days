@@ -3,10 +3,12 @@
 
 import React, { useState } from 'react';
 import { supabase } from '@/utils/supabaseClient';
+import { useRouter } from 'next/navigation';
 
 const SignInPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleSubmitSignIn = (e: React.FormEvent) => {
     e.preventDefault();
