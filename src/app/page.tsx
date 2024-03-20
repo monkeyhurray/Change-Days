@@ -27,9 +27,9 @@ export default async function Home() {
             <span>챌린지 개설하기</span>
           </p>
         </div>
-
         <MainSlider items={data} />
       </section>
     </>
   );
+
 }
