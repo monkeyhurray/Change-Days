@@ -1,4 +1,3 @@
-// src/app/sign/signin/page.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -10,9 +9,27 @@ const SignInPage = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSubmitSignIn = (e: React.FormEvent) => {
+  const handleSubmitSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    // signIn({ email, password });
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        alert('로그인 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.');
+        console.log(error);
+
+        return;
+      }
+    } catch (error) {
+      alert('로그인 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.');
+      console.log(error);
+    }
+
+    router.replace('/');
   };
 
   return (
