@@ -15,10 +15,10 @@ export type Database = {
           etc: string | null;
           frequency: string | null;
           id: string;
-          initial_date: string | null;
           name: string | null;
           period: string | null;
           public: boolean | null;
+          start_date: string | null;
           thumnail: string | null;
           user_id: string | null;
           vaild_time: string | null;
@@ -28,10 +28,10 @@ export type Database = {
           etc?: string | null;
           frequency?: string | null;
           id?: string;
-          initial_date?: string | null;
           name?: string | null;
           period?: string | null;
           public?: boolean | null;
+          start_date?: string | null;
           thumnail?: string | null;
           user_id?: string | null;
           vaild_time?: string | null;
@@ -41,10 +41,10 @@ export type Database = {
           etc?: string | null;
           frequency?: string | null;
           id?: string;
-          initial_date?: string | null;
           name?: string | null;
           period?: string | null;
           public?: boolean | null;
+          start_date?: string | null;
           thumnail?: string | null;
           user_id?: string | null;
           vaild_time?: string | null;
@@ -118,25 +118,25 @@ export type Database = {
           created_at: string | null;
           email: string | null;
           id: string;
-          profile_url: string | null;
+          name: string | null;
+          url: string | null;
           user_id: string;
-          user_name: string | null;
         };
         Insert: {
           created_at?: string | null;
           email?: string | null;
           id?: string;
-          profile_url?: string | null;
+          name?: string | null;
+          url?: string | null;
           user_id?: string;
-          user_name?: string | null;
         };
         Update: {
           created_at?: string | null;
           email?: string | null;
           id?: string;
-          profile_url?: string | null;
+          name?: string | null;
+          url?: string | null;
           user_id?: string;
-          user_name?: string | null;
         };
         Relationships: [
           {
