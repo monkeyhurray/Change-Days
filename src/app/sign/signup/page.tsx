@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+// [경로 변경 필요] utils 말고 supabase 폴더에서 import
 import { supabase } from '@/utils/supabaseClient';
 import { useRouter } from 'next/navigation';
 
@@ -30,8 +31,6 @@ const SignUpPage = () => {
     }
 
     alert('회원가입이 완료되었습니다!');
-
-    // 회원가입 완료 후 로그인으로!!
     router.replace('/sign/signin');
   };
 
