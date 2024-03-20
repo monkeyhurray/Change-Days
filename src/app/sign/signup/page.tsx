@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+// [경로 변경 필요] utils 말고 supabase 폴더에서 import
 import { supabase } from '@/utils/supabaseClient';
 import { useRouter } from 'next/navigation';
 
@@ -9,7 +10,7 @@ const SignUpPage = () => {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmitSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
@@ -17,6 +18,8 @@ const SignUpPage = () => {
         email,
         password,
       });
+
+      console.log('data: ', data);
 
       if (error) {
         alert('회원가입 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.');
@@ -30,15 +33,13 @@ const SignUpPage = () => {
     }
 
     alert('회원가입이 완료되었습니다!');
-
-    // 회원가입 완료 후 로그인으로!!
     router.replace('/sign/signin');
   };
 
   return (
     <div>
       <h2>회원가입</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmitSignUp}>
         <div>
           <label htmlFor='email'>Email:</label>
           <input
