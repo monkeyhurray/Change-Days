@@ -4,9 +4,7 @@ import { DateTime } from "luxon";
 import { useState } from "react";
 import { useRef } from "react";
 import Link from "next/link";
-
-import Image from "next/image";
-
+import UploadImg from "@/components/common/UploadImg";
 import {
   frequencyArr,
   periodArr,
@@ -249,7 +247,7 @@ const CreateChallengePage = () => {
             />
           </div>
         </div>
-
+        <UploadImg />
         <h1 className="mt-5 mb-5">진짜 인증 사진</h1>
         <img width={150} height={100} src={img} alt="진짜 이미지" />
         <input type="file" />
