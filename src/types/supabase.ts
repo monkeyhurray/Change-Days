@@ -11,67 +11,132 @@ export type Database = {
     Tables: {
       challenges: {
         Row: {
-          createdAt: string;
+          created_at: string;
           etc: string | null;
           frequency: string | null;
           id: string;
-          initialDate: string | null;
           name: string | null;
           period: string | null;
-          photo: string | null;
           public: boolean | null;
-          userId: string | null;
-          vaildTime: string | null;
+          start_date: string | null;
+          thumnail: string | null;
+          user_id: string | null;
+          vaild_time: string | null;
         };
         Insert: {
-          createdAt?: string;
+          created_at?: string;
           etc?: string | null;
           frequency?: string | null;
           id?: string;
-          initialDate?: string | null;
           name?: string | null;
           period?: string | null;
-          photo?: string | null;
           public?: boolean | null;
-          userId?: string | null;
-          vaildTime?: string | null;
+          start_date?: string | null;
+          thumnail?: string | null;
+          user_id?: string | null;
+          vaild_time?: string | null;
         };
         Update: {
-          createdAt?: string;
+          created_at?: string;
           etc?: string | null;
           frequency?: string | null;
           id?: string;
-          initialDate?: string | null;
           name?: string | null;
           period?: string | null;
-          photo?: string | null;
           public?: boolean | null;
-          userId?: string | null;
-          vaildTime?: string | null;
+          start_date?: string | null;
+          thumnail?: string | null;
+          user_id?: string | null;
+          vaild_time?: string | null;
         };
         Relationships: [];
+      };
+      user_challenges: {
+        Row: {
+          challenge_id: string;
+          id: string;
+          user_profile_id: string;
+        };
+        Insert: {
+          challenge_id: string;
+          id?: string;
+          user_profile_id: string;
+        };
+        Update: {
+          challenge_id?: string;
+          id?: string;
+          user_profile_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "userchallenges_challengingid_fkey";
+            columns: ["challenge_id"];
+            isOneToOne: false;
+            referencedRelation: "challenges";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "userchallenges_joineduserid_fkey";
+            columns: ["user_profile_id"];
+            isOneToOne: false;
+            referencedRelation: "user_profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      user_fulfill: {
+        Row: {
+          date: string;
+          id: string;
+          isdone: boolean;
+          user_challenge_id: string;
+        };
+        Insert: {
+          date: string;
+          id?: string;
+          isdone?: boolean;
+          user_challenge_id: string;
+        };
+        Update: {
+          date?: string;
+          id?: string;
+          isdone?: boolean;
+          user_challenge_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "userchallengeprogress_userchallengeid_fkey";
+            columns: ["user_challenge_id"];
+            isOneToOne: false;
+            referencedRelation: "user_challenges";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       user_profiles: {
         Row: {
           created_at: string | null;
+          email: string | null;
           id: string;
-          profile_url: string | null;
+          name: string | null;
+          url: string | null;
           user_id: string;
-          username: string | null;
         };
         Insert: {
           created_at?: string | null;
+          email?: string | null;
           id?: string;
-          profile_url?: string | null;
+          name?: string | null;
+          url?: string | null;
           user_id?: string;
-          username?: string | null;
         };
         Update: {
           created_at?: string | null;
+          email?: string | null;
           id?: string;
-          profile_url?: string | null;
+          name?: string | null;
+          url?: string | null;
           user_id?: string;
-          username?: string | null;
         };
         Relationships: [
           {
@@ -79,68 +144,6 @@ export type Database = {
             columns: ["user_id"];
             isOneToOne: false;
             referencedRelation: "users";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
-      userchallenges: {
-        Row: {
-          challengingid: string;
-          id: string;
-          joineduserid: string;
-        };
-        Insert: {
-          challengingid: string;
-          id?: string;
-          joineduserid: string;
-        };
-        Update: {
-          challengingid?: string;
-          id?: string;
-          joineduserid?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "userchallenges_challengingid_fkey";
-            columns: ["challengingid"];
-            isOneToOne: false;
-            referencedRelation: "challenges";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "userchallenges_joineduserid_fkey";
-            columns: ["joineduserid"];
-            isOneToOne: false;
-            referencedRelation: "user_profiles";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
-      userfulfill: {
-        Row: {
-          date: string;
-          id: string;
-          isdone: boolean;
-          userchallengeid: string;
-        };
-        Insert: {
-          date: string;
-          id?: string;
-          isdone?: boolean;
-          userchallengeid: string;
-        };
-        Update: {
-          date?: string;
-          id?: string;
-          isdone?: boolean;
-          userchallengeid?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "userchallengeprogress_userchallengeid_fkey";
-            columns: ["userchallengeid"];
-            isOneToOne: false;
-            referencedRelation: "userchallenges";
             referencedColumns: ["id"];
           }
         ];
