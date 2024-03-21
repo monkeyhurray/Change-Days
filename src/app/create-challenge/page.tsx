@@ -34,7 +34,6 @@ type PeriodChallenge = {
 
 const CreateChallengePage = () => {
   const dt = DateTime.now();
-
   const [name, setName] = useState("");
   const [frequency, setFrequency] = useState("매일");
   const [period, setPeriod] = useState("");
@@ -321,6 +320,7 @@ const CreateChallengePage = () => {
 
 const ACTIVE_BUTTON =
   "mt-1 flex text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700";
+
 const INACTIVE_BUTTON =
   "mt-1 w-20 h-7 justify-center flex border border-black-700 rounded border-black";
 
