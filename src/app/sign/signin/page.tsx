@@ -36,7 +36,7 @@ const SignInPage = () => {
   const handleSubmitSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!emailValid || !pwValid) {
+    if (email.length === 0 || password.length === 0) {
       setError('모든 입력칸을 올바르게 작성해주세요.');
       return;
     }
@@ -52,7 +52,9 @@ const SignInPage = () => {
       console.log('로그인 처리 후 확인 데이터 => ', data);
 
       if (error && error.message === 'Invalid login credentials') {
-        alert('가입되지 않은 사용자입니다.');
+        alert(
+          ' 아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.'
+        );
         console.log(error);
         return;
       }
@@ -72,7 +74,6 @@ const SignInPage = () => {
   return (
     <div>
       <h2>로그인</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmitSignIn}>
         <div>
           <label htmlFor='email'>Email:</label>
@@ -81,6 +82,9 @@ const SignInPage = () => {
             value={email}
             placeholder='ex. changedays@gmail.com'
             onChange={(e) => {
+              if (error.length !== 0) {
+                setError('');
+              }
               setEmail(e.target.value);
               validateEmail(e.target.value);
             }}
@@ -97,6 +101,9 @@ const SignInPage = () => {
             value={password}
             placeholder='ex. changedays!1234'
             onChange={(e) => {
+              if (error.length !== 0) {
+                setError('');
+              }
               setPassword(e.target.value);
               validatePassword(e.target.value);
             }}
@@ -107,6 +114,7 @@ const SignInPage = () => {
             * 영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
           </p>
         )}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <div>
           <button type='submit' disabled={loading}>
             {loading ? '처리 중...' : '로그인하기'}
