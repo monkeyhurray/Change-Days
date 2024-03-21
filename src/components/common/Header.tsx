@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { supabase } from '@/supabase/supabase';
-import { useRouter, usePathname } from 'next/navigation';
-import { Session } from '@supabase/supabase-js';
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/supabase/supabase";
+import { useRouter, usePathname } from "next/navigation";
+import { Session } from "@supabase/supabase-js";
+import HamburgerMenu from "./HamburgerMenu";
 
 const Header = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -19,7 +20,7 @@ const Header = () => {
         if (error) throw error;
         setSession(data.session);
       } catch (error) {
-        alert('Session 처리에 오류가 발생했습니다.');
+        alert("Session 처리에 오류가 발생했습니다.");
         console.log(error);
       }
     };
@@ -30,24 +31,24 @@ const Header = () => {
   const token = session?.access_token ? true : false;
 
   return (
-    <div className='flex bg-slate-300 h-14 items-center justify-between'>
+    <div className="flex border-b border-b-gray-500 h-14 items-center justify-between">
       <p>
-        <Link href='/'>Change Days</Link>
+        <Link className="font-bold text-lg" href="/">
+          Change Days
+        </Link>
       </p>
       <p>
         {token ? (
-          <button
-            onClick={() => {
+          <HamburgerMenu
+            signOut={() => {
               supabase.auth.signOut();
-              router.replace('/sign/signin');
+              router.replace("/sign/signin");
             }}
-          >
-            로그아웃
-          </button>
+          />
         ) : (
           <>
-            <Link href={'/sign/signin'}>로그인 /</Link>
-            <Link href={'/sign/signup'}>회원가입</Link>
+            <Link href={"/sign/signin"}>로그인 /</Link>
+            <Link href={"/sign/signup"}>회원가입</Link>
           </>
         )}
       </p>
