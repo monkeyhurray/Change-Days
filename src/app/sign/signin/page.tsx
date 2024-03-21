@@ -15,21 +15,22 @@ const SignInPage = () => {
   const router = useRouter();
 
   const validateEmail = (email: string) => {
-    const re = /\S+@\S+\.\S+/;
+    const regExp = /\S+@\S+\.\S+/;
     if (email.length === 0) {
       setEmailValid(true);
       return;
     }
-    setEmailValid(re.test(email));
+    setEmailValid(regExp.test(email));
   };
 
   const validatePassword = (password: string) => {
-    const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    const regExp =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (password.length === 0) {
       setPwValid(true);
       return;
     }
-    setPwValid(re.test(password));
+    setPwValid(regExp.test(password));
   };
 
   const handleSubmitSignIn = async (e: React.FormEvent) => {
@@ -50,8 +51,8 @@ const SignInPage = () => {
 
       console.log('로그인 처리 후 확인 데이터 => ', data);
 
-      if (error) {
-        alert('로그인 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.');
+      if (error && error.message === 'Invalid login credentials') {
+        alert('가입되지 않은 사용자입니다.');
         console.log(error);
         return;
       }
