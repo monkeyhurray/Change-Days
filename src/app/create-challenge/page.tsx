@@ -4,13 +4,15 @@ import { DateTime } from "luxon";
 import { useState } from "react";
 import { useRef } from "react";
 import Link from "next/link";
-import UploadImg from "@/components/common/UploadImg";
+import Image from "next/image";
+
 import {
   frequencyArr,
   periodArr,
 } from "@/components/createChallenge/noCreateCalendar";
+import camera from "../../../public/camera.jpg";
+import { postCreateChallengeData } from "@/components/hooks/useChallengeMutation";
 
-import { useCreateMutation } from "@/components/hooks/useChallengeMutation";
 type FrequencyIds = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 type FrequencyChallenge = {
@@ -27,11 +29,9 @@ type PeriodChallenge = {
 };
 
 const CreateChallengePage = () => {
-  const imgFalseRef = useRef<HTMLImageElement>(null);
-  const imgTrueRef = useRef<HTMLImageElement>(null);
   const dt = DateTime.now();
-  const [title, setTitle] = useState("");
-  const [textAreaAuthorize, setTextAreaAuthorize] = useState("");
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [name, setName] = useState("");
   const [frequency, setFrequency] = useState("매일");
   const [period, setPeriod] = useState("");
   const [periodNum, setPeriodNum] = useState(0);
@@ -39,17 +39,9 @@ const CreateChallengePage = () => {
   const [startToday, setStartToday] = useState("");
   const [monthWeek, setMonthWeek] = useState(9);
 
-  const [exampleFalseImg, setExampleFalseImg] = useState(
-    "https://newsimg-hams.hankookilbo.com/2023/06/09/3a4636e2-63f3-4aba-af1e-8f08e469f12d.jpg"
-  );
+  const [img, setImg] = useState(camera);
+  const [showUPloadImage, setShowUPloadImage] = useState(null);
 
-  const [exampleTrueImg, setExampleTrueImg] = useState(
-    "https://image.news1.kr/system/photos/2022/3/21/5278974/article.jpg/dims/optimize"
-  );
-
-  const [img, setImg] = useState("");
-
-  const postChallengeMutation = useCreateMutation();
   const arr = Array.from({ length: 7 }, (v, i) => i++);
 
   const frequencyFunc = (id: FrequencyIds) => {
@@ -70,31 +62,13 @@ const CreateChallengePage = () => {
 
   const onclickStartDay = (idx: number) => {
     setMonthWeek(idx);
+
     const plusDt = dt.plus({ days: idx + periodNum });
     const todayDt = dt.plus({ days: idx });
+
     const laterDate = plusDt.month + "월" + plusDt.day + "일";
     setStartToday(`${todayDt.month}월${todayDt.day}일`);
     setStartDate(laterDate);
-  };
-
-  const readFalseImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
-
-    const imageFile = e.target.files[0];
-    const reader = new FileReader();
-    console.log(imageFile);
-    console.log(reader);
-
-    reader.onload = (event: ProgressEvent<FileReader>) => {
-      console.log(event.target?.result);
-      if (!event || !event.target) return;
-      if (typeof event.target.result !== "string" || !imgFalseRef.current)
-        return;
-
-      imgFalseRef.current.src = event.target.result as string;
-    };
-    console.log(imgFalseRef);
-    reader.readAsDataURL(imageFile);
   };
 
   const readTrueImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,19 +79,21 @@ const CreateChallengePage = () => {
 
     reader.onload = (event: ProgressEvent<FileReader>) => {
       if (!event || !event.target) return;
-      if (typeof event.target.result !== "string" || !imgTrueRef.current)
-        return;
+      if (typeof event.target.result !== "string" || !imgRef.current) return;
 
-      imgTrueRef.current.src = event.target.result as string;
+      imgRef.current.src = event.target.result as string;
     };
 
+    setImg(camera);
     reader.readAsDataURL(imageFile);
   };
 
-  const createChallengeBtn = () => {
-    setTitle("");
-    setTextAreaAuthorize("");
-    postChallengeMutation.mutate();
+  const createChallengeBtn = async () => {
+    const newChallenge: { name: string } = {
+      name,
+    };
+    await postCreateChallengeData(newChallenge);
+    setName("");
   };
 
   return (
@@ -128,9 +104,9 @@ const CreateChallengePage = () => {
           <h1>제목:&nbsp;</h1>
           <input
             className="border border-black-700 rounded border-black"
-            value={title}
+            value={name}
             required
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <h1 className="mb-5">인증 빈도:&nbsp;</h1>
@@ -180,11 +156,7 @@ const CreateChallengePage = () => {
             );
           })}
         </div>
-        {/* <div>인증 가능 시간</div>
-        <div className="h-20 w-44 border border-black-700 rounded border-black">
-          <button>시작 시간&nbsp;|</button>
-          <button>&nbsp;종료 시간</button>
-        </div> */}
+
         <h1 className="mb-3">시작일:&nbsp;</h1>
         <div className="mb-3 mt-1 flex">
           {arr.map((num) => {
@@ -207,56 +179,28 @@ const CreateChallengePage = () => {
             ? `${startToday} ~ ${startDate}`
             : ""}
         </h1>
-        <div>
-          <div className="mb-3">인증 방법</div>
-          <textarea
-            className="h-28 w-6/12 border border-black-700 rounded border-black"
-            value={textAreaAuthorize}
-            placeholder="예) 오늘 날짜와 걸음 수가 적힌 만보기 캡쳐 화면 업로드"
-            required
-            onChange={(e) => setTextAreaAuthorize(e.target.value)}
-          />
-        </div>
 
         <label>나쁜 예시 사진</label>
-        <div>
-          <input
-            type="file"
-            onChange={(e) => readFalseImage(e)}
-            accept="image/*"
-          />
-          <div>
-            <img
-              ref={imgFalseRef}
-              src={exampleFalseImg}
-              width={200}
-              height={200}
-              alt="img"
-            />
-          </div>
-        </div>
-        <label>옳은 예시 사진</label>
-        <div>
-          <input
-            type="file"
-            onChange={(e) => readTrueImage(e)}
-            accept="image/*"
-          />
 
-          <div>
-            <img
-              ref={imgTrueRef}
-              src={exampleTrueImg}
-              width={200}
-              height={200}
-              alt="img"
-            />
-          </div>
-        </div>
-        <UploadImg />
         <h1 className="mt-5 mb-5">진짜 인증 사진</h1>
-        <img width={150} height={100} src={img} alt="진짜 이미지" />
-        <input type="file" />
+
+        <input
+          id="upload"
+          type="file"
+          className="hidden"
+          onChange={(e) => readTrueImage(e)}
+          accept="image/*"
+        />
+        <label htmlFor="upload" className="cursor-pointer">
+          <Image
+            className="inline"
+            width={60}
+            height={60}
+            src={img}
+            alt="사진"
+          />
+        </label>
+
         <div>
           <Link
             className="inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
