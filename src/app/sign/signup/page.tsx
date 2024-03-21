@@ -15,21 +15,22 @@ const SignUpPage = () => {
   const router = useRouter();
 
   const validateEmail = (email: string) => {
-    const re = /\S+@\S+\.\S+/;
+    const regExp = /\S+@\S+\.\S+/;
     if (email.length === 0) {
       setEmailValid(true);
       return;
     }
-    setEmailValid(re.test(email));
+    setEmailValid(regExp.test(email));
   };
 
   const validatePassword = (password: string) => {
-    const re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    const regExp =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (password.length === 0) {
       setPwValid(true);
       return;
     }
-    setPwValid(re.test(password));
+    setPwValid(regExp.test(password));
   };
 
   const handleSubmitSignUp = async (e: React.FormEvent) => {
