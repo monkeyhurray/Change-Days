@@ -1,17 +1,21 @@
 "use client";
 
 import { DateTime } from "luxon";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
+import { supabase } from "@/supabase/supabase";
+
 import {
   frequencyArr,
   periodArr,
-} from "@/components/createChallenge/noCreateCalendar";
+} from "@/components/createChallenge/createCalendar";
+
 import camera from "../../../public/camera.jpg";
 import { postCreateChallengeData } from "@/components/hooks/useChallengeMutation";
+import { useRouter } from "next/navigation";
 
 type FrequencyIds = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
@@ -30,7 +34,6 @@ type PeriodChallenge = {
 
 const CreateChallengePage = () => {
   const dt = DateTime.now();
-  const imgRef = useRef<HTMLImageElement>(null);
   const [name, setName] = useState("");
   const [frequency, setFrequency] = useState("매일");
   const [period, setPeriod] = useState("");
@@ -38,12 +41,13 @@ const CreateChallengePage = () => {
   const [startDate, setStartDate] = useState("");
   const [startToday, setStartToday] = useState("");
   const [monthWeek, setMonthWeek] = useState(9);
+  const [introduce, setIntroduce] = useState("");
+  const [prevImage, setPrevImage] = useState("");
+  const [uploadImg, setUploadImg] = useState<File | null>(null);
 
-  const [img, setImg] = useState(camera);
-  const [showUPloadImage, setShowUPloadImage] = useState(null);
-
+  const fileRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
   const arr = Array.from({ length: 7 }, (v, i) => i++);
-
   const frequencyFunc = (id: FrequencyIds) => {
     const frequencyArrFilter = frequencyArr.find(
       (item) => item.id === id
@@ -70,7 +74,11 @@ const CreateChallengePage = () => {
     setStartToday(`${todayDt.month}월${todayDt.day}일`);
     setStartDate(laterDate);
   };
-
+  const handleClickEvent = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    createChallengeBtn();
+    router.push("/");
+  };
   const readTrueImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
 
@@ -79,19 +87,47 @@ const CreateChallengePage = () => {
 
     reader.onload = (event: ProgressEvent<FileReader>) => {
       if (!event || !event.target) return;
-      if (typeof event.target.result !== "string" || !imgRef.current) return;
+      if (typeof event.target.result !== "string" || !fileRef.current) return;
 
-      imgRef.current.src = event.target.result as string;
+      fileRef.current.src = event.target.result as string;
     };
+    setUploadImg(imageFile);
 
-    setImg(camera);
+    console.log(imageFile);
+    console.log(imageFile.name);
     reader.readAsDataURL(imageFile);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setPrevImage(reader.result as string);
+      };
+    });
+  };
+
+  const toUseStorage = async () => {
+    try {
+      const { error } = await supabase.storage
+        .from("images")
+        .upload(("challenge/" + uploadImg?.name) as string, uploadImg as File, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (error) {
+        alert(error);
+        return console.log(error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const createChallengeBtn = async () => {
-    const newChallenge: { name: string } = {
+    const newChallenge: { name: string; frequency: string } = {
       name,
+      frequency,
     };
+
+    await toUseStorage();
     await postCreateChallengeData(newChallenge);
     setName("");
   };
@@ -131,7 +167,7 @@ const CreateChallengePage = () => {
             return (
               <div key={item.id}>
                 {frequency === item.value ? (
-                  <div>인증 요일은 {item.certificationDays} </div>
+                  <div>인증 요일은 {item.certificationDays} 입니다. </div>
                 ) : (
                   <></>
                 )}
@@ -179,27 +215,43 @@ const CreateChallengePage = () => {
             ? `${startToday} ~ ${startDate}`
             : ""}
         </h1>
-
-        <label>나쁜 예시 사진</label>
-
-        <h1 className="mt-5 mb-5">진짜 인증 사진</h1>
-
-        <input
-          id="upload"
-          type="file"
-          className="hidden"
-          onChange={(e) => readTrueImage(e)}
-          accept="image/*"
-        />
-        <label htmlFor="upload" className="cursor-pointer">
-          <Image
-            className="inline"
-            width={60}
-            height={60}
-            src={img}
-            alt="사진"
+        <div className="flex">
+          <input
+            id="upload"
+            ref={fileRef}
+            type="file"
+            className="hidden"
+            onChange={(e) => readTrueImage(e)}
+            accept="image/*"
           />
-        </label>
+
+          <label htmlFor="upload" className="cursor-pointer">
+            <Image
+              className="inline"
+              width={60}
+              height={60}
+              src={camera}
+              alt="사진"
+            />
+          </label>
+
+          {prevImage !== "" ? (
+            <Image src={prevImage} width={60} height={60} alt="보여줄 사진" />
+          ) : (
+            <></>
+          )}
+        </div>
+
+        <div>
+          <div className="mb-3">소개</div>
+          <textarea
+            className="h-28 w-6/12 border border-black-700 rounded border-black"
+            value={introduce}
+            placeholder="예) 하루에 10키로 뛰기"
+            required
+            onChange={(e) => setIntroduce(e.target.value)}
+          />
+        </div>
 
         <div>
           <Link
@@ -208,13 +260,12 @@ const CreateChallengePage = () => {
           >
             이전
           </Link>
-          <Link
+          <button
             className="inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
-            href="/"
-            onClick={createChallengeBtn}
+            onClick={handleClickEvent}
           >
             완료
-          </Link>
+          </button>
         </div>
       </div>
     </div>
@@ -223,6 +274,7 @@ const CreateChallengePage = () => {
 
 const ACTIVE_BUTTON =
   "mt-1 flex text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700";
+
 const INACTIVE_BUTTON =
   "mt-1 w-20 h-7 justify-center flex border border-black-700 rounded border-black";
 
