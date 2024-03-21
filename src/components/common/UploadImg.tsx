@@ -2,30 +2,27 @@ import { useRef, useState } from "react";
 
 const UploadImg = () => {
   const fileRef = useRef<HTMLImageElement>(null);
-  // const fileRef = useRef() as LegacyRef<HTMLImageElement> | undefined;
+  const [attachment, setAttachment] = useState(); 
   const [falseImg, setFalseImg] = useState(null);
   const handleChang = () => {};
 
   const readFalseImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
-
-    const imageFile = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (event: ProgressEvent<FileReader>) => {
-      if (!fileRef) return;
-
-      if (!event || !event.target) return;
-      if (typeof event.target.result !== "string" || !fileRef.current) return;
-
-      fileRef.current.src = event.target.result as string;
+    if(!e.target.files)return 
+    const imageFile = e.target.files[0] ;
+    const reader = new FileReader();  
+    
+    reader.onload = (finishedEvent) => {
+      
+      setAttachment(result);
+    }
+    //파일 데이터를 URL로 변환하기
+    reader.readAsDataURL(theFile);
     };
-
-    reader.readAsDataURL(imageFile);
+   
   };
 
   return (
-    <form>
+    <form >
       <div className="px-4 py-6">
         <div
           id="image-preview"

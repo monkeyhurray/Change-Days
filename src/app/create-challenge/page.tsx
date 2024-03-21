@@ -34,6 +34,7 @@ type PeriodChallenge = {
 
 const CreateChallengePage = () => {
   const dt = DateTime.now();
+
   const [name, setName] = useState("");
   const [frequency, setFrequency] = useState("매일");
   const [period, setPeriod] = useState("");
