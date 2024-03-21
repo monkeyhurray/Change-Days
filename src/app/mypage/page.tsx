@@ -42,9 +42,9 @@ const UserPage = () => {
       <button onClick={handleClickButton}>유저 정보변경버튼</button>
       <div>
         <nav className="flex justify-center gap-8">
-          <Link href={`${id}/challenges/ongoing`}>진행</Link>
-          <Link href={`${id}/challenges/done`}>완료</Link>
-          <Link href={`${id}/challenges/create`}>개설</Link>
+          <Link href={`mypage/challenges`}>진행</Link>
+          <Link href={`mypage/challenges`}>완료</Link>
+          <Link href={`mypage/challenges`}>개설</Link>
         </nav>
         <section className="flex justify-center gap-8">
           <p>현재 유저의 챌린지</p>

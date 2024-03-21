@@ -2,7 +2,7 @@
 import React from "react";
 
 const Challenges = () => {
-  return <div></div>;
+  return <div>challenges</div>;
 };
 
 export default Challenges;
