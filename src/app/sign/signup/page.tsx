@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-// [경로 변경 필요] utils 말고 supabase 폴더에서 import
 import { supabase } from "@/supabase/supabase";
 import { useRouter } from "next/navigation";
 
@@ -18,8 +17,6 @@ const SignUpPage = () => {
         email,
         password,
       });
-
-      console.log("data: ", data);
 
       if (error) {
         alert("회원가입 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.");
