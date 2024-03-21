@@ -60,7 +60,7 @@ const SignUpPage = () => {
       setEmail('');
       setPassword('');
 
-      alert('회원가입이 완료되었습니다! 로그인창으로 이동합니다.');
+      alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
       router.replace('/sign/signin');
     } catch (error: any) {
       setError(error.error_description || error.message);
