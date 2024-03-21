@@ -89,15 +89,19 @@ const SearchPage = () => {
           />
         </form>
         <div className="flex py-14 pt-20 max-h-full ">
-          <div className="flex flex-wrap justify-center gap-8">
-            {infiniteData?.pages[0]?.supabaseData?.map((challenge) => (
-              <ChallengeCard
-                key={challenge.id}
-                challenge={challenge}
-                innerRef={ref}
-              />
-            ))}
-            {!infiniteData?.pages[0]?.supabaseData?.length && (
+          <div className="flex flex-wrap justify-center  gap-8">
+            {infiniteData?.pages.map((page) => page.supabaseData)[0].length !==
+            0 ? (
+              infiniteData?.pages.map((page) =>
+                page.supabaseData.map((challenge) => (
+                  <ChallengeCard
+                    key={challenge.id}
+                    challenge={challenge}
+                    innerRef={ref}
+                  />
+                ))
+              )
+            ) : (
               <h3>검색된 데이터가 없습니다.</h3>
             )}
           </div>
