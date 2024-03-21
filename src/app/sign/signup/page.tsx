@@ -36,7 +36,7 @@ const SignUpPage = () => {
   const handleSubmitSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!emailValid || !pwValid) {
+    if (email.length === 0 || password.length === 0) {
       setError('모든 입력칸을 올바르게 작성해주세요.');
       return;
     }
@@ -49,8 +49,10 @@ const SignUpPage = () => {
         password,
       });
 
-      if (error) {
-        alert('회원가입 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.');
+      console.log('회원가입 처리 후 확인 데이터 => ', data);
+
+      if (error && error.message === 'User already registered') {
+        alert('이미 가입된 이메일입니다.');
         console.log(error);
         return;
       }
@@ -58,7 +60,7 @@ const SignUpPage = () => {
       setEmail('');
       setPassword('');
 
-      alert('회원가입이 완료되었습니다!');
+      alert('회원가입이 완료되었습니다! 로그인창으로 이동합니다.');
       router.replace('/sign/signin');
     } catch (error: any) {
       setError(error.error_description || error.message);
@@ -72,7 +74,6 @@ const SignUpPage = () => {
   return (
     <div>
       <h2>회원가입</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmitSignUp}>
         <div>
           <label htmlFor='email'>Email:</label>
@@ -81,10 +82,12 @@ const SignUpPage = () => {
             value={email}
             placeholder='ex. changedays@gmail.com'
             onChange={(e) => {
+              if (error.length !== 0) {
+                setError('');
+              }
               setEmail(e.target.value);
               validateEmail(e.target.value);
             }}
-            required
           />
         </div>
         {!emailValid && (
@@ -98,10 +101,12 @@ const SignUpPage = () => {
             value={password}
             placeholder='ex. changedays!1234'
             onChange={(e) => {
+              if (error.length !== 0) {
+                setError('');
+              }
               setPassword(e.target.value);
               validatePassword(e.target.value);
             }}
-            required
           />
         </div>
         {!pwValid && (
@@ -109,7 +114,7 @@ const SignUpPage = () => {
             * 영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
           </p>
         )}
-
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <div>
           <button type='submit' disabled={loading}>
             {loading ? '처리 중...' : '회원가입하기'}
