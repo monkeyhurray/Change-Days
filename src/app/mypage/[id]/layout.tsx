@@ -20,6 +20,7 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
       if (isLogin) {
         setShouldRender(isLogin);
       } else {
+        // alert가 의존성 배열 때문에 2번 뜨는 이슈가 있음 => 해결해야 함
         alert('로그인이 필요한 서비스입니다.');
         router.replace('/sign/signin');
       }

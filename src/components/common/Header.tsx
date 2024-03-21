@@ -4,9 +4,10 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/supabase/supabase';
 import { useRouter, usePathname } from 'next/navigation';
+import { Session } from '@supabase/supabase-js';
 
 const Header = () => {
-  const [session, setSession] = useState<any>();
+  const [session, setSession] = useState<Session | null>(null);
 
   const router = useRouter();
   const pathname = usePathname();

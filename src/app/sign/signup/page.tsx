@@ -18,8 +18,6 @@ const SignUpPage = () => {
         password,
       });
 
-      console.log('data: ', data);
-
       if (error) {
         alert('회원가입 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.');
         console.log(error);
