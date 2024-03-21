@@ -3,6 +3,7 @@ import { FaPlus } from "react-icons/fa6";
 import { supabase } from "@/supabase/supabase";
 import { Tables } from "@/types/supabase";
 import Search from "@/components/home/Search";
+import Link from "next/link";
 export type ChallengeListRow = Tables<"challenges">;
 export default async function Home() {
   const { data, error } = await supabase
@@ -27,7 +28,9 @@ export default async function Home() {
             <span className="mr-2">
               <FaPlus />
             </span>
-            <span>챌린지 개설하기</span>
+            <Link href="/create-challenge">
+              <span>챌린지 개설하기</span>
+            </Link>
           </p>
         </div>
         <MainSlider items={data} />
