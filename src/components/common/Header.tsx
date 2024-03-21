@@ -14,8 +14,14 @@ const Header = () => {
 
   useEffect(() => {
     const getUserSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      setSession(data.session);
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        setSession(data.session);
+      } catch (error) {
+        alert('Session 처리에 오류가 발생했습니다.');
+        console.log(error);
+      }
     };
 
     getUserSession();
