@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { supabase } from '@/utils/supabaseClient';
+import { supabase } from '@/supabase/supabase';
 import { useRouter } from 'next/navigation';
 
 const SignInPage = () => {
@@ -17,6 +17,8 @@ const SignInPage = () => {
         email,
         password,
       });
+
+      console.log('로그인 처리 후 확인 데이터 => ', data);
 
       if (error) {
         alert('로그인 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.');
@@ -41,6 +43,7 @@ const SignInPage = () => {
           type='email'
           value={email}
           placeholder='ex. changedays@gmail.com'
+          // minLength={}
           onChange={(e) => setEmail(e.target.value)}
         />
 

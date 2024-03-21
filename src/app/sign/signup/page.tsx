@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-// [경로 변경 필요] utils 말고 supabase 폴더에서 import
-import { supabase } from '@/utils/supabaseClient';
+import { supabase } from '@/supabase/supabase';
 import { useRouter } from 'next/navigation';
 
 const SignUpPage = () => {
