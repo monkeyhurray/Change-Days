@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { supabase } from "@/supabase/supabase";
 import { useInView } from "react-intersection-observer";
-import ChallengeCard from "@/components/ChallengeCard";
+import ChallengeCard from "@/components/searchPage/ChallengeCard";
 import useSearchStore from "@/store/store";
 
 const SearchPage = () => {
@@ -65,11 +65,6 @@ const SearchPage = () => {
     setSearchItem(event.target.value);
   };
 
-  // const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   setSearchClicked(true);
-  // };
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -77,15 +72,13 @@ const SearchPage = () => {
     });
   };
 
-  // const content = infiniteData?.pages.map((page) => page.supabaseData);
   useEffect(() => {
     resetText();
   }, []);
   return (
-    <div className="bg-white flex justify-center min-h-full py-32">
-      {/* <div className="max-w-md text-center"> */}
-      <div className="w-full text-center">
-        <form className="flex items-center justify-center mb-8">
+    <div className="bg-white flex justify-center min-w-full min-h-full py-32">
+      <div>
+        <form className="flex items-center justify-center mb-10">
           <input
             type="text"
             placeholder="검색어를 입력하세요"
@@ -95,27 +88,23 @@ const SearchPage = () => {
             className="px-4 py-2 mr-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
           />
         </form>
-        <div className="flex p-4  pt-20 max-h-full justify-center">
-          <div className="flex flex-wrap  gap-8 justify-center">
-            {infiniteData?.pages.map((page) => page.supabaseData)[0].length !==
-            0 ? (
-              infiniteData?.pages.map((page) =>
-                page.supabaseData.map((challenge) => (
-                  <ChallengeCard
-                    key={challenge.id}
-                    challenge={challenge}
-                    innerRef={ref}
-                  />
-                ))
-              )
-            ) : (
+        <div className="flex py-14 pt-20 max-h-full ">
+          <div className="flex flex-wrap justify-center gap-8">
+            {infiniteData?.pages[0]?.supabaseData?.map((challenge) => (
+              <ChallengeCard
+                key={challenge.id}
+                challenge={challenge}
+                innerRef={ref}
+              />
+            ))}
+            {!infiniteData?.pages[0]?.supabaseData?.length && (
               <h3>검색된 데이터가 없습니다.</h3>
             )}
           </div>
 
           <button
             onClick={scrollToTop}
-            className="fixed bottom-10 right-10 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+            className="fixed bottom-10 right-10  text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 bg-blue-400"
           >
             맨 위로
           </button>
