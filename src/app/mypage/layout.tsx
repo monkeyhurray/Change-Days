@@ -6,7 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 
 const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname: any = usePathname();
 
   const [shouldRender, setShouldRender] = useState<boolean>(false);
 
@@ -18,6 +18,7 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
       // 로그인, 회원가입 로직에는 반대로 해서 적용해야 함
       const isLogin = data.session?.access_token ? true : false;
       if (isLogin) {
+        router.push(`/mypage/${data.session?.user.id}`);
         setShouldRender(isLogin);
       } else {
         // alert가 의존성 배열 때문에 2번 뜨는 이슈가 있음 => 해결해야 함
@@ -25,7 +26,6 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
         router.replace("/sign/signin");
       }
     };
-
     getUserSession();
   }, [router, pathname]);
 
