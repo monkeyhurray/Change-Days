@@ -11,45 +11,56 @@ export type Database = {
     Tables: {
       challenges: {
         Row: {
-          created_at: string;
+          created_at: string | null;
+          created_by: string | null;
+          end_date: string | null;
+          end_time: string | null;
           etc: string | null;
           frequency: string | null;
           id: string;
           name: string | null;
-          period: string | null;
           public: boolean | null;
           start_date: string | null;
-          thumnail: string | null;
-          user_id: string | null;
-          vaild_time: string | null;
+          start_time: string | null;
+          thumbnail: string | null;
         };
         Insert: {
-          created_at?: string;
+          created_at?: string | null;
+          created_by?: string | null;
+          end_date?: string | null;
+          end_time?: string | null;
           etc?: string | null;
           frequency?: string | null;
           id?: string;
           name?: string | null;
-          period?: string | null;
           public?: boolean | null;
           start_date?: string | null;
-          thumnail?: string | null;
-          user_id?: string | null;
-          vaild_time?: string | null;
+          start_time?: string | null;
+          thumbnail?: string | null;
         };
         Update: {
-          created_at?: string;
+          created_at?: string | null;
+          created_by?: string | null;
+          end_date?: string | null;
+          end_time?: string | null;
           etc?: string | null;
           frequency?: string | null;
           id?: string;
           name?: string | null;
-          period?: string | null;
           public?: boolean | null;
           start_date?: string | null;
-          thumnail?: string | null;
-          user_id?: string | null;
-          vaild_time?: string | null;
+          start_time?: string | null;
+          thumbnail?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "public_challenges_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["uid"];
+          }
+        ];
       };
       user_challenges: {
         Row: {
@@ -69,17 +80,17 @@ export type Database = {
         };
         Relationships: [
           {
+            foreignKeyName: "public_user_challenges_user_profile_id_fkey";
+            columns: ["user_profile_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["uid"];
+          },
+          {
             foreignKeyName: "userchallenges_challengingid_fkey";
             columns: ["challenge_id"];
             isOneToOne: false;
             referencedRelation: "challenges";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "userchallenges_joineduserid_fkey";
-            columns: ["user_profile_id"];
-            isOneToOne: false;
-            referencedRelation: "user_profiles";
             referencedColumns: ["id"];
           }
         ];
@@ -113,36 +124,33 @@ export type Database = {
           }
         ];
       };
-      user_profiles: {
+      users: {
         Row: {
-          created_at: string | null;
+          created_at: string;
           email: string | null;
-          id: string;
           name: string | null;
+          uid: string;
           url: string | null;
-          user_id: string;
         };
         Insert: {
-          created_at?: string | null;
+          created_at?: string;
           email?: string | null;
-          id?: string;
           name?: string | null;
+          uid: string;
           url?: string | null;
-          user_id?: string;
         };
         Update: {
-          created_at?: string | null;
+          created_at?: string;
           email?: string | null;
-          id?: string;
           name?: string | null;
+          uid?: string;
           url?: string | null;
-          user_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "public_user_profiles_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
+            foreignKeyName: "public_users_uid_fkey";
+            columns: ["uid"];
+            isOneToOne: true;
             referencedRelation: "users";
             referencedColumns: ["id"];
           }
