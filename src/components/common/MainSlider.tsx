@@ -32,7 +32,7 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
         <SwiperSlide key={item.id}>
           <Link href={`/challenge/${item.id}`} className=" bg-blue-100">
             <Image
-              className="bg-red-300"
+              className="bg-black"
               src="/challenge.jpeg"
               alt="vercel"
               width="300"

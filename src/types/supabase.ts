@@ -11,136 +11,147 @@ export type Database = {
     Tables: {
       challenges: {
         Row: {
-          createdAt: string;
+          created_at: string | null;
+          created_by: string | null;
+          end_date: string | null;
+          end_time: string | null;
           etc: string | null;
           frequency: string | null;
           id: string;
-          initialDate: string | null;
           name: string | null;
-          period: string | null;
-          photo: string | null;
           public: boolean | null;
-          userId: string | null;
-          vaildTime: string | null;
-        };
-        Insert: {
-          createdAt?: string;
-          etc?: string | null;
-          frequency?: string | null;
-          id?: string;
-          initialDate?: string | null;
-          name?: string | null;
-          period?: string | null;
-          photo?: string | null;
-          public?: boolean | null;
-          userId?: string | null;
-          vaildTime?: string | null;
-        };
-        Update: {
-          createdAt?: string;
-          etc?: string | null;
-          frequency?: string | null;
-          id?: string;
-          initialDate?: string | null;
-          name?: string | null;
-          period?: string | null;
-          photo?: string | null;
-          public?: boolean | null;
-          userId?: string | null;
-          vaildTime?: string | null;
-        };
-        Relationships: [];
-      };
-      user_profiles: {
-        Row: {
-          created_at: string | null;
-          id: string;
-          profile_url: string | null;
-          user_id: string;
-          username: string | null;
+          start_date: string | null;
+          start_time: string | null;
+          thumbnail: string | null;
         };
         Insert: {
           created_at?: string | null;
+          created_by?: string | null;
+          end_date?: string | null;
+          end_time?: string | null;
+          etc?: string | null;
+          frequency?: string | null;
           id?: string;
-          profile_url?: string | null;
-          user_id?: string;
-          username?: string | null;
+          name?: string | null;
+          public?: boolean | null;
+          start_date?: string | null;
+          start_time?: string | null;
+          thumbnail?: string | null;
         };
         Update: {
           created_at?: string | null;
+          created_by?: string | null;
+          end_date?: string | null;
+          end_time?: string | null;
+          etc?: string | null;
+          frequency?: string | null;
           id?: string;
-          profile_url?: string | null;
-          user_id?: string;
-          username?: string | null;
+          name?: string | null;
+          public?: boolean | null;
+          start_date?: string | null;
+          start_time?: string | null;
+          thumbnail?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: "public_user_profiles_user_id_fkey";
-            columns: ["user_id"];
+            foreignKeyName: "public_challenges_created_by_fkey";
+            columns: ["created_by"];
             isOneToOne: false;
             referencedRelation: "users";
-            referencedColumns: ["id"];
+            referencedColumns: ["uid"];
           }
         ];
       };
-      userchallenges: {
+      user_challenges: {
         Row: {
-          challengingid: string;
+          challenge_id: string;
           id: string;
-          joineduserid: string;
+          user_profile_id: string;
         };
         Insert: {
-          challengingid: string;
+          challenge_id: string;
           id?: string;
-          joineduserid: string;
+          user_profile_id: string;
         };
         Update: {
-          challengingid?: string;
+          challenge_id?: string;
           id?: string;
-          joineduserid?: string;
+          user_profile_id?: string;
         };
         Relationships: [
           {
+            foreignKeyName: "public_user_challenges_user_profile_id_fkey";
+            columns: ["user_profile_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["uid"];
+          },
+          {
             foreignKeyName: "userchallenges_challengingid_fkey";
-            columns: ["challengingid"];
+            columns: ["challenge_id"];
             isOneToOne: false;
             referencedRelation: "challenges";
             referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "userchallenges_joineduserid_fkey";
-            columns: ["joineduserid"];
-            isOneToOne: false;
-            referencedRelation: "user_profiles";
-            referencedColumns: ["id"];
           }
         ];
       };
-      userfulfill: {
+      user_fulfill: {
         Row: {
           date: string;
           id: string;
           isdone: boolean;
-          userchallengeid: string;
+          user_challenge_id: string;
         };
         Insert: {
           date: string;
           id?: string;
           isdone?: boolean;
-          userchallengeid: string;
+          user_challenge_id: string;
         };
         Update: {
           date?: string;
           id?: string;
           isdone?: boolean;
-          userchallengeid?: string;
+          user_challenge_id?: string;
         };
         Relationships: [
           {
             foreignKeyName: "userchallengeprogress_userchallengeid_fkey";
-            columns: ["userchallengeid"];
+            columns: ["user_challenge_id"];
             isOneToOne: false;
-            referencedRelation: "userchallenges";
+            referencedRelation: "user_challenges";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      users: {
+        Row: {
+          created_at: string;
+          email: string | null;
+          name: string | null;
+          uid: string;
+          url: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          email?: string | null;
+          name?: string | null;
+          uid: string;
+          url?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          email?: string | null;
+          name?: string | null;
+          uid?: string;
+          url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_users_uid_fkey";
+            columns: ["uid"];
+            isOneToOne: true;
+            referencedRelation: "users";
             referencedColumns: ["id"];
           }
         ];
