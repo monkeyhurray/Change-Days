@@ -79,12 +79,16 @@ const ProfilePage = () => {
               <img
                 src={imageUrl}
                 alt="프로필 이미지"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover cursor-pointer"
               />
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-400 text-sm">
-                  <img src={user.url} />
+                <span className="text-gray-400 text-sm w-full h-full">
+                  <img
+                    src={user.url}
+                    alt="유저프로필"
+                    className="w-full h-full"
+                  />
                 </span>
               </div>
             )}
@@ -105,7 +109,7 @@ const ProfilePage = () => {
         >
           <div className="mb-4">
             <label htmlFor="name" className="mr-2 font-bold">
-              이름:{user ? user.name : ""}
+              이름:
             </label>
             <input
               type="text"

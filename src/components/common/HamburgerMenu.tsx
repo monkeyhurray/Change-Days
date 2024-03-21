@@ -34,7 +34,7 @@ const HamburgerMenu = ({ signOut }: PropsWithChildren<props>) => {
 
       {isOpen && (
         <div className="absolute p-3 z-10 top-0 right-0 mt-10 w-36 bg-white border border-gray-200 shadow-lg rounded">
-          <Link href="mypage" onClick={() => handleToggle()}>
+          <Link href="/mypage" onClick={() => handleToggle()}>
             마이페이지
           </Link>
           <div onClick={signOut} className="cursor-pointer pt-2">
