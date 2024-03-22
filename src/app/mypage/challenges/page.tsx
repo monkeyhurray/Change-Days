@@ -17,11 +17,11 @@ type UserChallenge = {
   challenge_id: string;
   user_profile_id: string;
   challenges: Challenge;
-
+  startDate: number;
+  endDate: number;
 };
 
 const Challenges = () => {
-
   const [challenges, setChallenges] = useState<UserChallenge[]>([]);
 
   useEffect(() => {
@@ -54,8 +54,6 @@ const Challenges = () => {
 
   console.log("올바르게 불러와지는 지 체크임", challenges);
 
-  
-
   return (
     <div className="min-w-120">
       <h2 className="flex justify-center">Challenges</h2>
@@ -64,8 +62,12 @@ const Challenges = () => {
           challenges.map((item) => {
             const {formatStartDate, formatEndDate, durationMessage, formattedCreatedAt } = timeUtil(item.challenges.start_date, item.challenges.end_date, item.challenges.createdAt)
 
+
             return (
-              <div className="flex justify-between gap-8" key={item.challenges.id}>
+              <div
+                className="flex justify-between gap-8"
+                key={item.challenges.id}
+              >
                 <img
                   src={`${item.challenges.thumbnail}`}
                   alt="섬네일 이미지"
@@ -76,13 +78,13 @@ const Challenges = () => {
                   <p>{item.challenges.name} {durationMessage}</p>
                   <p>{formatStartDate} ~ {formatEndDate} </p>
                   <p> 생성일자 {formattedCreatedAt}</p>
+
                 </div>
               </div>
             );
           })
         ) : (
-            <p>도전중인 챌린지가 존재하지 않아요 </p>
-            
+          <p>도전중인 챌린지가 존재하지 않아요 </p>
         )}
       </ul>
     </div>
