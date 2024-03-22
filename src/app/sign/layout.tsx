@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '@/supabase/supabase';
 import { useRouter } from 'next/navigation';
 
-const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
+function SignPageLayout({ children }: { children: React.ReactNode }) {
   const [shouldRender, setShouldRender] = useState<boolean>(false);
   const router = useRouter();
 
@@ -13,24 +13,23 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
 
     const getUserSession = async () => {
       const { data, error } = await supabase.auth.getSession();
-      console.log('data => ', data);
 
       try {
         if (!checkUnmounted) {
           const isLogin = data.session?.access_token ? true : false;
 
-          if (isLogin) {
+          if (!isLogin) {
             setShouldRender(true);
           } else {
-            alert('로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.');
-            router.replace('/sign/signin');
+            alert('이미 로그인된 상태입니다. 마이 페이지로 이동합니다.');
+            router.replace('/mypage');
             return;
           }
         }
       } catch (error) {
         console.error(`Error: ${error}`);
         alert(
-          '로그인 상태가 불안정합니다. 새로고침 후에도 지속될 시,고객센터로 연락해주세요.'
+          '오류가 발생하였습니다. 새로고침 후에도 지속될 시, 고객센터로 연락해주세요.'
         );
       }
     };
@@ -42,6 +41,6 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
   }, [router]);
 
   return <>{shouldRender && children}</>;
-};
+}
 
-export default MyPageLayout;
+export default SignPageLayout;
