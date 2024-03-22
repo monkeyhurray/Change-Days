@@ -8,22 +8,12 @@ import Image from "next/image";
 
 import { supabase } from "@/supabase/supabase";
 
-import {
-  frequencyArr,
-  periodArr,
-} from "@/components/createChallenge/createCalendar";
+import { periodArr } from "@/components/createChallenge/createCalendar";
 
 import camera from "../../../public/camera.jpg";
 import { useRouter } from "next/navigation";
 
 type FrequencyIds = 1 | 2 | 3 | 4 | 5 | 6 | 7;
-
-type FrequencyChallenge = {
-  id: FrequencyIds;
-  certificationDays: string;
-  value: string;
-  days: number;
-};
 
 type PeriodChallenge = {
   id: FrequencyIds;
@@ -33,8 +23,7 @@ type PeriodChallenge = {
 
 const CreateChallengePage = () => {
   const dateTime = DateTime.now();
-  const [name, setName] = useState("");
-  const [frequency, setFrequency] = useState("매일");
+  const [title, setTitle] = useState("");
   const [period, setPeriod] = useState("");
   const [periodNum, setPeriodNum] = useState(0);
   const [endDate, setEndDate] = useState("");
@@ -69,12 +58,6 @@ const CreateChallengePage = () => {
   const fileRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const arr = Array.from({ length: 7 }, (v, i) => i++);
-  const frequencyFunc = (id: FrequencyIds) => {
-    const frequencyArrFilter = frequencyArr.find(
-      (item) => item.id === id
-    ) as FrequencyChallenge;
-    setFrequency(frequencyArrFilter.value);
-  };
 
   const periodFunc = (id: FrequencyIds) => {
     const periodArrFilter = periodArr.find(
@@ -152,8 +135,7 @@ const CreateChallengePage = () => {
           created_by: createdBy,
           start_date: startDate,
           end_date: endDate,
-          name,
-          frequency,
+          name: title,
         },
       ]);
 
@@ -183,7 +165,6 @@ const CreateChallengePage = () => {
   const handleClickEvent = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     await handleSubmit();
-    setName("");
     router.push("/");
   };
 
@@ -195,41 +176,12 @@ const CreateChallengePage = () => {
           <h1>제목:&nbsp;</h1>
           <input
             className="border border-black-700 rounded border-black"
-            value={name}
+            value={title}
             required
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <h1 className="mb-5">인증 빈도:&nbsp;</h1>
-        <div className="mb-5 mt-1 flex">
-          {frequencyArr.map((item) => {
-            return (
-              <div key={item.id}>
-                <button
-                  className={`mr-2 ${
-                    frequency === item.value ? ACTIVE_BUTTON : INACTIVE_BUTTON
-                  }`}
-                  onClick={() => frequencyFunc(item.id)}
-                >
-                  {item.value}
-                </button>
-              </div>
-            );
-          })}
-        </div>
-        <div className="mb-3">
-          {frequencyArr.map((item) => {
-            return (
-              <div key={item.id}>
-                {frequency === item.value ? (
-                  <div>인증 요일은 {item.certificationDays} 입니다. </div>
-                ) : (
-                  <></>
-                )}
-              </div>
-            );
-          })}
-        </div>
+
         <h1 className="mb-3">챌린지 기간:&nbsp;</h1>
         <div className="mb-3 mt-1 flex">
           {periodArr.map((item) => {
