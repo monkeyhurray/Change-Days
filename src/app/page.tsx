@@ -9,28 +9,26 @@ import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";
 export type ChallengeListRow = Tables<"challenges">;
 export default function Home() {
-  const [data, setData] = useState<ChallengeListRow | any>();
+  const [data, setData] = useState<ChallengeListRow | any>([]);
   const [userData, setUserData] = useState<{ user: User | null }>();
   useEffect(() => {
     const fetchData = async () => {
       const { data, error } = await supabase
         .from<any, ChallengeListRow>("challenges")
         .select("*");
-      //  console.log("data", data);
+      console.log("data", data);
       //  setData(data);
       if (error) {
         console.log("error", error);
       }
-      return data;
+      setData(data);
     };
-    const data = fetchData();
-    console.log("data", data);
+    fetchData();
   }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       const { data, error } = await supabase.auth.getUser();
-      console.log(data);
       setUserData(data);
     };
     fetchData();
