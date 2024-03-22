@@ -9,7 +9,7 @@ type Challenge = {
   createdAt : string
 };
 
-  export const fetchChallenges = async (userId : string, setChallengesCallback :(challenges : Challenge[]) => void) : Promise<void> => {
+  export const fetchChallenges = async (userId : string, setChallengesCallback : any) => {
     if (!userId) return;
 
       if (userId) {
@@ -20,7 +20,7 @@ type Challenge = {
           id, 
           challenge_id,
           user_profile_id,
-          challenges :challenge_id (*)
+          challenges :challenge_id (name, start_date, end_date, thumbnail, etc, created_at)
         `
           )
           .eq("user_profile_id", userId);

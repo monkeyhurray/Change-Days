@@ -19,8 +19,8 @@ type UserChallenge = {
   challenge_id: string;
   user_profile_id: string;
   challenges: Challenge;
-  startDate: number;
-  endDate: number;
+  startDate: string;
+  endDate: string;
 };
 
 const Challenges = () => {
@@ -41,7 +41,7 @@ const Challenges = () => {
   console.log("올바르게 불러와지는 지 체크임", challenges);
 
   const handleGetChallengeButton = (id : string) => {
-    router.push(`/challenge/${id}`)
+    router.push(`/mypage/challenges/${id}`)
   }
 
 
