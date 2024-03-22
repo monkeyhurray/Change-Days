@@ -21,7 +21,6 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
           const isLogin = data.session?.access_token ? true : false;
 
           if (isLogin) {
-            router.push(`/mypage/${data.session?.user.id}`);
             setShouldRender(true);
           } else {
             alert('로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.');
