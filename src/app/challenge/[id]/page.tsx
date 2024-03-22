@@ -1,11 +1,11 @@
 import { supabase } from "@/supabase/supabase";
 import React from "react";
 import { ChallengeListRow } from "@/app/page";
-
-const page = async (
-  props: React.PropsWithChildren<{ params: { id: string } }>
-) => {
-  const id = props.params.id;
+type props = {
+  params: { id: string };
+};
+const ChallengePage = async ({ params }: props) => {
+  const id = params.id;
 
   const { data, error } = await supabase
     .from<any, ChallengeListRow>("challenges")
@@ -31,7 +31,7 @@ const page = async (
                 2주 동안
               </span>
             </p>
-            <span>작성자 : {challenge.userId}</span>
+            <span>작성자 : {challenge.created_by}</span>
           </div>
           <div>
             <p className="py-5 text-xl font-bold">챌린지 소개</p>
@@ -59,4 +59,4 @@ const page = async (
   }
 };
 
-export default page;
+export default ChallengePage;
