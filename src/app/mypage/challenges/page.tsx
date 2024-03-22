@@ -1,6 +1,6 @@
 "use client";
 import { supabase } from "@/supabase/supabase";
-import { DateTime } from "luxon";
+import { timeUtil } from "@/utils/timeutils";
 import React, { useEffect, useState } from "react";
 
 type Challenge = {
@@ -16,8 +16,7 @@ type UserChallenge = {
   challenge_id: string;
   user_profile_id: string;
   challenges: Challenge;
-  startDate: number;
-  endDate: number;
+
 };
 
 const Challenges = () => {
@@ -62,26 +61,7 @@ const Challenges = () => {
       <ul className="flex flex-col justify-center items-center gap-8">
         {challenges.length > 0 ? (
           challenges.map((item) => {
-            const startDate  = DateTime.fromISO(item.challenges.start_date)
-            const endDate = DateTime.fromISO(item.challenges.end_date)
-
-            const formatStartDate = startDate.toFormat('M월 d일')
-            const formatendtDate = endDate.toFormat('M월 d일')
-
-            const diff = endDate.diff(startDate, ['days'])
-            const diffDays = diff.days
-
-            const weeks = Math.floor(diffDays / 7)
-            const days = diffDays % 7
-
-            let durationMessage = `${diffDays}일`
-
-            if (weeks > 0) {
-              durationMessage = `${weeks}주`
-              if (days > 0) {
-                durationMessage += `${days}일`
-              }
-            }
+            const {formatStartDate, formatEndDate, durationMessage} = timeUtil(item.challenges.start_date, item.challenges.end_date)
 
             return (
               <div className="flex justify-between gap-8" key={item.challenges.id}>
@@ -93,7 +73,7 @@ const Challenges = () => {
                 />
                 <div>
                   <p>{item.challenges.name} {durationMessage}</p>
-                  <p>{formatStartDate} ~ {formatendtDate} </p>
+                  <p>{formatStartDate} ~ {formatEndDate} </p>
                 </div>
               </div>
             );
