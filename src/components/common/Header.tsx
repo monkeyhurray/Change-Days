@@ -37,7 +37,7 @@ const Header = () => {
           Change Days
         </Link>
       </p>
-      <p>
+      <div>
         {token ? (
           <HamburgerMenu
             signOut={() => {
@@ -51,7 +51,7 @@ const Header = () => {
             <Link href={"/sign/signup"}>회원가입</Link>
           </>
         )}
-      </p>
+      </div>
     </div>
   );
 };

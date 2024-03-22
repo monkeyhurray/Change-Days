@@ -30,13 +30,13 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
     >
       {items.map((item: ChallengeListRow) => (
         <SwiperSlide key={item.id}>
-          <Link href={`/challenge/${item.id}`} className=' bg-blue-100'>
-            <Image
-              className='bg-black'
-              src='/challenge.jpeg'
-              alt='vercel'
-              width='300'
-              height='300'
+          <Link href={`/challenge/${item.id}`} className=" bg-blue-100">
+            <img
+              className="bg-black"
+              src={item.thumbnail ? item.thumbnail : "/challenge.jpeg"}
+              alt="vercel"
+              width="300"
+              height="300"
             />
             <p className="text-m mb-1">{item.created_by}</p>
             <p className="text-xl mb-1">{item.name}</p>

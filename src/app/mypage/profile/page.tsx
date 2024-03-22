@@ -2,10 +2,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "@/supabase/supabase";
-import CustomModal from "@/components/common/CustomModal";
-import { useParams, useRouter } from "next/navigation";
-import UploadModal from "@/components/common/UploadModal";
-import { UserDataProps } from "@/components/mypage/UserData";
 
 const ProfilePage = () => {
   const [user, setUser] = useState<any | null>(null);
