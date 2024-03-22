@@ -2,58 +2,6 @@
 
 import UserData, { UserDataProps } from "@/components/mypage/UserData";
 import { supabase } from "@/supabase/supabase";
-<<<<<<< HEAD
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-
-const UserPage = () => {
-  const router = useRouter();
-  const { id } = useParams();
-  const [user, setUser] = useState<UserDataProps | null>(null);
-
-  const fetchUserData = async () => {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("uid", id)
-      .single();
-
-    if (error) {
-      console.error(error);
-      return;
-    }
-
-    setUser(data);
-  };
-
-  useEffect(() => {
-    if (id) {
-      fetchUserData();
-    }
-  }, [id]);
-
-  const handleClickButton = () => {
-    router.push(`/mypage/${id}/profile`);
-  };
-
-  return (
-    <>
-      {user && <UserData id={user.id} name={user.name} url={user.url} />}
-      <button onClick={handleClickButton}>유저 정보변경버튼</button>
-      <div>
-        <nav className="flex justify-center gap-8">
-          <Link href={`mypage/challenges`}>진행</Link>
-          <Link href={`mypage/challenges`}>완료</Link>
-          <Link href={`mypage/challenges`}>개설</Link>
-        </nav>
-        <section className="flex justify-center gap-8">
-          <p>현재 유저의 챌린지</p>
-        </section>
-      </div>
-    </>
-  );
-=======
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -125,7 +73,6 @@ const UserPage = () => {
       </div>
     );
   }
->>>>>>> 5aceba5 (fix: 코드 수정 완료)
 };
 
 export default UserPage;

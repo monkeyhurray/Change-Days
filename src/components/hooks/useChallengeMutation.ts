@@ -3,6 +3,8 @@ import { supabase } from "@/supabase/supabase";
 const postCreateChallengeData = async (newChallenge: {
   name: string;
   frequency: string;
+  endDate: string;
+  startDate: string;
 }) => {
   try {
     const { error } = await supabase
@@ -11,6 +13,8 @@ const postCreateChallengeData = async (newChallenge: {
         {
           name: newChallenge.name,
           frequency: newChallenge.frequency,
+          startDate: newChallenge.startDate,
+          endDate: newChallenge.endDate,
         },
       ])
       .select();

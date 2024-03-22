@@ -38,8 +38,8 @@ const CreateChallengePage = () => {
   const [frequency, setFrequency] = useState("매일");
   const [period, setPeriod] = useState("");
   const [periodNum, setPeriodNum] = useState(0);
+  const [endDate, setEndDate] = useState("");
   const [startDate, setStartDate] = useState("");
-  const [startToday, setStartToday] = useState("");
   const [monthWeek, setMonthWeek] = useState(9);
   const [introduce, setIntroduce] = useState("");
   const [prevImage, setPrevImage] = useState("");
@@ -71,15 +71,11 @@ const CreateChallengePage = () => {
     const todayDt = dt.plus({ days: idx });
 
     const laterDate = plusDt.month + "월" + plusDt.day + "일";
-    setStartToday(`${todayDt.month}월${todayDt.day}일`);
-    setStartDate(laterDate);
+    setStartDate(`${todayDt.month}월${todayDt.day}일`);
+    setEndDate(laterDate);
   };
-  const handleClickEvent = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    createChallengeBtn();
-    router.push("/");
-  };
-  const readTrueImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const readImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
 
     const imageFile = e.target.files[0];
@@ -103,33 +99,83 @@ const CreateChallengePage = () => {
     });
   };
 
-  const toUseStorage = async () => {
+  const toUseStorage = async (file: File) => {
+    const fileExt = file?.name.split(".").pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+
     try {
       const { error } = await supabase.storage
         .from("images")
-        .upload(("challenge/" + uploadImg?.name) as string, uploadImg as File, {
+        .upload(`challenge/${fileName}`, file, {
           cacheControl: "3600",
           upsert: false,
         });
 
       if (error) {
-        alert(error);
-        return console.log(error);
+        throw new Error("이미지 업로드 실패", error);
       }
+      return `${process.env
+        .NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/challenge/${fileName}`;
     } catch (error) {
       console.log(error);
     }
   };
 
+  const insertThumbnailUrlToDatabase = async (thumbnailUrl: string) => {
+    const { data: storageUrl, error } = await supabase
+      .from("challenges")
+      .update({ thumbnail: thumbnailUrl })
+      .eq("id", "value");
+    console.log("thumbnailUrl: ", thumbnailUrl);
+    console.log("data: ", storageUrl);
+
+    if (error) {
+      throw new Error(`데이터베이스 삽입 실패:, ${error.message}`);
+    }
+
+    return storageUrl;
+  };
+
+  const handleSubmit = async () => {
+    if (!uploadImg) return;
+
+    try {
+      const uploadedImageUrl = await toUseStorage(uploadImg);
+
+      // TODO - img 업로드 실패 시 처리
+      if (!uploadedImageUrl) return;
+
+      console.log("uploadedImageUrl:", uploadedImageUrl);
+      await insertThumbnailUrlToDatabase(uploadedImageUrl);
+
+      alert("이미지가 성공적으로 업로드되었습니다.");
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   const createChallengeBtn = async () => {
-    const newChallenge: { name: string; frequency: string } = {
+    const newChallenge: {
+      name: string;
+      frequency: string;
+      endDate: string;
+      startDate: string;
+    } = {
       name,
       frequency,
+      startDate,
+      endDate,
     };
 
-    await toUseStorage();
+    await handleSubmit();
     await postCreateChallengeData(newChallenge);
     setName("");
+  };
+
+  const handleClickEvent = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    createChallengeBtn();
+    router.push("/");
   };
 
   return (
@@ -210,9 +256,7 @@ const CreateChallengePage = () => {
           })}
         </div>
         <h1 className="mb-3">
-          {startDate !== "" && monthWeek !== 9
-            ? `${startToday} ~ ${startDate}`
-            : ""}
+          {endDate !== "" && monthWeek !== 9 ? `${startDate} ~ ${endDate}` : ""}
         </h1>
         <div className="flex">
           <input
@@ -220,7 +264,7 @@ const CreateChallengePage = () => {
             ref={fileRef}
             type="file"
             className="hidden"
-            onChange={(e) => readTrueImage(e)}
+            onChange={(e) => readImage(e)}
             accept="image/*"
           />
 
