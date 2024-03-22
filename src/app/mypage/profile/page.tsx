@@ -1,11 +1,13 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "@/supabase/supabase";
+import { useRouter } from "next/navigation";
 
 const ProfilePage = () => {
   const [user, setUser] = useState<any | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const fetchUserData = async () => {
     const { data, error } = await supabase.auth.getUser();
@@ -31,6 +33,7 @@ const ProfilePage = () => {
         return;
       }
       fetchUserData();
+      router.replace("/mypage");
     }
   };
   useEffect(() => {
@@ -41,7 +44,15 @@ const ProfilePage = () => {
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get("name") as string;
     const url = imageUrl as string;
-    handleUpdateUser(name, url);
+    if (name === user.name && url === null) {
+      alert("변경된 데이터가 없습니다.");
+      return;
+    }
+    if (url) {
+      handleUpdateUser(name, url);
+    } else {
+      handleUpdateUser(name, user.url);
+    }
   };
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -78,7 +89,7 @@ const ProfilePage = () => {
                   <img
                     src={user.url}
                     alt="유저프로필"
-                    className="w-full h-full"
+                    className="w-full h-full cursor-pointer"
                   />
                 </span>
               </div>
