@@ -1,6 +1,7 @@
 "use client";
 import { supabase } from "@/supabase/supabase";
 import { timeUtil } from "@/utils/timeutils";
+import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 
 type Challenge = {
@@ -26,9 +27,9 @@ const Challenges = () => {
   useEffect(() => {
     const fetchChallenges = async () => {
       const { data } = await supabase.auth.getSession();
-      const userData = data.session?.user.id;
+      const userId = data.session?.user.id;
 
-      if (userData) {
+      if (userId) {
         const { data, error } = await supabase
           .from("user_challenges")
           .select(
@@ -36,15 +37,16 @@ const Challenges = () => {
           id, 
           challenge_id,
           user_profile_id,
-          challenges:challenge_id (*)  // challenges 테이블과 조인
+          challenges 
         `
           )
-          .eq("user_profile_id", userData);
+          .eq("user_profile_id", userId);
 
         if (error) {
           console.error("에러발생함", error);
           return;
         }
+        console.log('data', data);
         setChallenges(data);
       }
     };
@@ -79,7 +81,8 @@ const Challenges = () => {
             );
           })
         ) : (
-          <p>도전중인 챌린지가 존재하지 않아요</p>
+            <p>도전중인 챌린지가 존재하지 않아요 </p>
+            
         )}
       </ul>
     </div>
