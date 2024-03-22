@@ -4,16 +4,22 @@ type TimeUtilFormat = {
   formatStartDate: string;
   formatEndDate: string;
   durationMessage: string;
+  formattedCreatedAt: string; // formattedCreatedAt를 반환 형식에 추가
 };
 
-export const timeUtil = (startIso: string, endIso: string): TimeUtilFormat => {
+export const timeUtil = (
+  startIso: string,
+  endIso: string,
+  createdAtIso: string // created_at을 인수로 전달
+): TimeUtilFormat => {
   const startDate = DateTime.fromISO(startIso);
   const endDate = DateTime.fromISO(endIso);
+  const createdAtDate = DateTime.fromISO(createdAtIso); // created_at을 DateTime으로 변환
 
-  const formatStartDate = startDate.toFormat('M월 d일');
-  const formatEndDate = endDate.toFormat('M월 d일'); 
+  const formatStartDate = startDate.toFormat("M월 d일");
+  const formatEndDate = endDate.toFormat("M월 d일");
 
-  const diff = endDate.diff(startDate, ['days']);
+  const diff = endDate.diff(startDate, ["days"]);
   const diffDays = diff.days;
 
   const weeks = Math.floor(diffDays / 7);
@@ -28,5 +34,18 @@ export const timeUtil = (startIso: string, endIso: string): TimeUtilFormat => {
     }
   }
 
-  return { formatStartDate, formatEndDate, durationMessage }; 
+  const formattedCreatedAt = createdAtDate.setLocale("ko").toLocaleString({
+    weekday: "short",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+  return {
+    formatStartDate,
+    formatEndDate,
+    durationMessage,
+    formattedCreatedAt,
+  }; // formattedCreatedAt를 반환 객체에 포함
 };
