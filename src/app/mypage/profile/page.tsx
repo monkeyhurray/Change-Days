@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "@/supabase/supabase";
@@ -8,6 +9,7 @@ const ProfilePage = () => {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const fetchUserData = async () => {
+
     const { data, error } = await supabase.auth.getUser();
     if (data.user) {
       const { data: userData, error: userError } = await supabase
