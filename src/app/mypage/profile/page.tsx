@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "@/supabase/supabase";
@@ -9,7 +8,6 @@ const ProfilePage = () => {
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const fetchUserData = async () => {
-
     const { data, error } = await supabase.auth.getUser();
     if (data.user) {
       const { data: userData, error: userError } = await supabase
@@ -32,15 +30,12 @@ const ProfilePage = () => {
         console.error(error);
         return;
       }
-
       fetchUserData();
     }
   };
-
   useEffect(() => {
     fetchUserData();
   }, []);
-
   const handleSubmitEvent = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -48,13 +43,11 @@ const ProfilePage = () => {
     const url = imageUrl as string;
     handleUpdateUser(name, url);
   };
-
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = (e) => setImageUrl(e.target?.result as string);
     reader.readAsDataURL(file);
@@ -118,7 +111,6 @@ const ProfilePage = () => {
               required
             />
           </div>
-
           <button
             type="submit"
             className="bg-black text-white font-bold py-2 px-4 rounded-md"
@@ -129,5 +121,4 @@ const ProfilePage = () => {
       </div>
     );
 };
-
 export default ProfilePage;

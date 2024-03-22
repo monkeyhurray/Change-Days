@@ -1,7 +1,6 @@
 "use client";
 import { supabase } from "@/supabase/supabase";
 import { timeUtil } from "@/utils/timeutils";
-import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 
 type Challenge = {
@@ -10,6 +9,7 @@ type Challenge = {
   start_date: string;
   end_date: string;
   thumbnail: string;
+  createdAt : string
 };
 
 type UserChallenge = {
@@ -17,11 +17,11 @@ type UserChallenge = {
   challenge_id: string;
   user_profile_id: string;
   challenges: Challenge;
-
+  startDate: number;
+  endDate: number;
 };
 
 const Challenges = () => {
-
   const [challenges, setChallenges] = useState<UserChallenge[]>([]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Challenges = () => {
           id, 
           challenge_id,
           user_profile_id,
-          challenges 
+          challenges :challenge_id (*)
         `
           )
           .eq("user_profile_id", userId);
@@ -46,7 +46,6 @@ const Challenges = () => {
           console.error("에러발생함", error);
           return;
         }
-        console.log('data', data);
         setChallenges(data);
       }
     };
@@ -55,18 +54,20 @@ const Challenges = () => {
 
   console.log("올바르게 불러와지는 지 체크임", challenges);
 
-  
-
   return (
     <div className="min-w-120">
       <h2 className="flex justify-center">Challenges</h2>
       <ul className="flex flex-col justify-center items-center gap-8">
         {challenges.length > 0 ? (
           challenges.map((item) => {
-            const {formatStartDate, formatEndDate, durationMessage} = timeUtil(item.challenges.start_date, item.challenges.end_date)
+            const {formatStartDate, formatEndDate, durationMessage, formattedCreatedAt } = timeUtil(item.challenges.start_date, item.challenges.end_date, item.challenges.createdAt)
+
 
             return (
-              <div className="flex justify-between gap-8" key={item.challenges.id}>
+              <div
+                className="flex justify-between gap-8"
+                key={item.challenges.id}
+              >
                 <img
                   src={`${item.challenges.thumbnail}`}
                   alt="섬네일 이미지"
@@ -76,13 +77,14 @@ const Challenges = () => {
                 <div>
                   <p>{item.challenges.name} {durationMessage}</p>
                   <p>{formatStartDate} ~ {formatEndDate} </p>
+                  <p> 생성일자 {formattedCreatedAt}</p>
+
                 </div>
               </div>
             );
           })
         ) : (
-            <p>도전중인 챌린지가 존재하지 않아요 </p>
-            
+          <p>도전중인 챌린지가 존재하지 않아요 </p>
         )}
       </ul>
     </div>

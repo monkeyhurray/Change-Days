@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { supabase } from '@/supabase/supabase';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from "react";
+import { supabase } from "@/supabase/supabase";
+import { useRouter } from "next/navigation";
 
 const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
   const [shouldRender, setShouldRender] = useState<boolean>(false);
@@ -22,15 +22,15 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
           if (isLogin) {
             setShouldRender(true);
           } else {
-            alert('로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.');
-            router.replace('/sign/signin');
+            alert("로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.");
+            router.replace("/sign/signin");
             return;
           }
         }
       } catch (error) {
         console.error(`Error: ${error}`);
         alert(
-          '로그인 상태가 불안정합니다. 새로고침 후에도 지속될 시,고객센터로 연락해주세요.'
+          "로그인 상태가 불안정합니다. 새로고침 후에도 지속될 시,고객센터로 연락해주세요."
         );
       }
     };
