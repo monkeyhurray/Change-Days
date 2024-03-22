@@ -1,14 +1,15 @@
-'use client';
+"use client";
 // Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import 'swiper/css';
+import "swiper/css";
 
-import React, { PropsWithChildren } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { ChallengeListRow } from '@/app/page';
+import React, { PropsWithChildren, useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { ChallengeListRow } from "@/app/page";
+import { supabase } from "@/supabase/supabase";
 type Item = {
   name: string;
   id: number;
@@ -20,15 +21,50 @@ type Item = {
 type Props = {
   items: ChallengeListRow[] | any;
 };
+const fetchUserData = async (userId: string | null) => {
+  if (userId) {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("uid", userId)
+      .single();
+
+    if (error) {
+      console.error("사용자 정보를 가져오는 데 실패했습니다.", error);
+      return null;
+    }
+
+    return data; // 사용자 정보 반환
+  }
+};
+
 const MainSlider = ({ items }: PropsWithChildren<Props>) => {
+  const [userData, setUserData] = useState<{ name: string }[]>([]);
+  useEffect(() => {
+    // MainSlider 컴포넌트가 렌더링될 때마다 사용자 정보를 가져오는 효과
+    const fetchData = async () => {
+      const userDataPromises = items.map((item: ChallengeListRow) =>
+        fetchUserData(item.created_by)
+      );
+      const userDataList = await Promise.all(userDataPromises);
+      setUserData(userDataList);
+    };
+
+    fetchData();
+  }, [items]); // items가 변경될 때마다 실행
+
+  useEffect(() => {
+    console.log("userData", userData);
+  }, [userData]);
+
   return (
     <Swiper
       spaceBetween={30}
       slidesPerView={4}
-      onSlideChange={() => console.log('slide change')}
+      onSlideChange={() => console.log("slide change")}
       onSwiper={(swiper) => console.log(swiper)}
     >
-      {items.map((item: ChallengeListRow) => (
+      {items.map((item: ChallengeListRow, index: number) => (
         <SwiperSlide key={item.id}>
           <Link href={`/challenge/${item.id}`} className=" bg-blue-100">
             <img
@@ -38,13 +74,13 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
               width="300"
               height="300"
             />
-            <p className="text-m mb-1">{item.created_by}</p>
+            <p className="text-m mb-1">{userData[index]?.name}</p>
             <p className="text-xl mb-1">{item.name}</p>
             <p>
               <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
                 {item.start_date}-{item.end_date}
               </span>
-              <span className='bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700'>
+              <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
                 {item.frequency}
               </span>
             </p>
