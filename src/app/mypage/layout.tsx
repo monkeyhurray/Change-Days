@@ -15,7 +15,6 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
       const { data, error } = await supabase.auth.getSession();
       console.log("data => ", data);
 
-      // 로그인, 회원가입 로직에는 반대로 해서 적용해야 함
       try {
         if (!checkUnmounted) {
           const isLogin = data.session?.access_token ? true : false;
@@ -30,7 +29,9 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
         }
       } catch (error) {
         console.error(`Error: ${error}`);
-        alert("고객님의 로그인 상태가 불안정합니다. 고객센터로 연락해주세요.");
+        alert(
+          "로그인 상태가 불안정합니다. 새로고침 후에도 지속될 시,고객센터로 연락해주세요."
+        );
       }
     };
     getUserSession();
