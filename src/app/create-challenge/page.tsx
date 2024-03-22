@@ -169,7 +169,7 @@ const CreateChallengePage = () => {
   };
 
   return (
-    <div className=" mt-8">
+    <form className=" mt-8">
       {" "}
       <div className=" ml-96">
         <div className="flex mb-5">
@@ -274,7 +274,7 @@ const CreateChallengePage = () => {
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
