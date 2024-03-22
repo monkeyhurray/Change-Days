@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/supabase/supabase';
@@ -13,7 +13,7 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
 
     const getUserSession = async () => {
       const { data, error } = await supabase.auth.getSession();
-      console.log('data => ', data);
+      console.log("data => ", data);
 
       try {
         if (!checkUnmounted) {
@@ -41,7 +41,11 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
     };
   }, [router]);
 
-  return <>{shouldRender && children}</>;
+  return (
+    <div className="p-7 pt-10 mt-5 mx-auto w-2/5 min-w-96 rounded-lg shadow-lg shadow-gray-500/50">
+      {shouldRender && children}
+    </div>
+  );
 };
 
 export default MyPageLayout;

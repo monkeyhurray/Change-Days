@@ -38,11 +38,11 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
               width='300'
               height='300'
             />
-            <p className='text-m mb-1'>{item.name}</p>
-            <p className='text-xl mb-1'>{item.name}</p>
+            <p className="text-m mb-1">{item.created_by}</p>
+            <p className="text-xl mb-1">{item.name}</p>
             <p>
-              <span className='bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700'>
-                {item.period}
+              <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
+                {item.start_date}-{item.end_date}
               </span>
               <span className='bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700'>
                 {item.frequency}
