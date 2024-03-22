@@ -1,6 +1,8 @@
 "use client";
 import { supabase } from "@/supabase/supabase";
+import { fetchChallenges } from "@/utils/fetchChallenges";
 import { timeUtil } from "@/utils/timeutils";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 type Challenge = {
@@ -22,37 +24,26 @@ type UserChallenge = {
 };
 
 const Challenges = () => {
+
+  const router = useRouter()
   const [challenges, setChallenges] = useState<UserChallenge[]>([]);
 
+
   useEffect(() => {
-    const fetchChallenges = async () => {
-      const { data } = await supabase.auth.getSession();
+    supabase.auth.getSession().then(({ data }) => {
       const userId = data.session?.user.id;
-
       if (userId) {
-        const { data, error } = await supabase
-          .from("user_challenges")
-          .select(
-            `
-          id, 
-          challenge_id,
-          user_profile_id,
-          challenges :challenge_id (*)
-        `
-          )
-          .eq("user_profile_id", userId);
-
-        if (error) {
-          console.error("에러발생함", error);
-          return;
-        }
-        setChallenges(data);
+        fetchChallenges(userId, setChallenges);
       }
-    };
-    fetchChallenges();
+    })
   }, []);
 
   console.log("올바르게 불러와지는 지 체크임", challenges);
+
+  const handleGetChallengeButton = (id : string) => {
+    router.push(`/challenge/${id}`)
+  }
+
 
   return (
     <div className="min-w-120">
@@ -65,6 +56,7 @@ const Challenges = () => {
 
             return (
               <div
+                onClick={()=>handleGetChallengeButton(item.challenges.id)}
                 className="flex justify-between gap-8"
                 key={item.challenges.id}
               >

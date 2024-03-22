@@ -3,6 +3,7 @@ import { supabase } from "@/supabase/supabase";
 import React, { useEffect, useState } from "react";
 import { ChallengeListRow } from "@/app/page";
 import ParticipateBtn from "@/components/challenge/ParticipateBtn";
+import { timeUtil } from "@/utils/timeutils";
 
 type Props = {
   params: { id: string };
@@ -12,13 +13,14 @@ const ChallengePage = ({ params }: Props) => {
   const id = params.id;
   const [challenge, setChallenge] = useState<ChallengeListRow | null>(null);
   const [createdByUser, setCreatedByUser] = useState<string | null>(null);
+  const [durationMessage, setDurationMessage] =useState<string> ('')
 
   useEffect(() => {
     const fetchData = async () => {
-      // 챌린지 정보 가져오기
       const { data: challengeData, error: challengeError } = await supabase
         .from("challenges")
-        .select("*")
+        .select(`*,
+          user_challenges!inner(*)`)
         .eq("id", id)
         .single();
 
@@ -29,10 +31,13 @@ const ChallengePage = ({ params }: Props) => {
         );
         return;
       }
-
       setChallenge(challengeData);
 
-      // 사용자 정보 가져오기
+       if (challengeData) {
+        const { durationMessage } = timeUtil(challengeData.start_date, challengeData.end_date, challengeData.created_at);
+        setDurationMessage(durationMessage);
+      }
+
       if (challengeData && challengeData.created_by) {
         const { data: userData, error: userError } = await supabase
           .from("users")
@@ -66,7 +71,7 @@ const ChallengePage = ({ params }: Props) => {
           <p className="mb-2">
             <span className="mr-5 text-2xl">{challenge.name}</span>
             <span className="mr-3 text-white bg-gray-600 p-2 rounded-xl">
-              {challenge.frequency}
+              {durationMessage}
             </span>
             <span className="mr-3 text-white bg-gray-600 p-2 rounded-xl">
               {challenge.start_date}-{challenge.end_date}
