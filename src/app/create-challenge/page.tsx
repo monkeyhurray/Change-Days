@@ -123,6 +123,7 @@ const CreateChallengePage = () => {
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
     try {
+      console.log(fileName);
       const { error } = await supabase.storage
         .from("images")
         .upload(`challenge/${fileName}`, file, {
@@ -133,8 +134,9 @@ const CreateChallengePage = () => {
       if (error) {
         throw new Error("이미지 업로드 실패", error);
       }
+
       return `${process.env
-        .NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/challenge/${fileName}`;
+        .NEXT_PUBLIC_SUPABASE_URL!}/storage/v1/object/public/images/challenge/${fileName}`;
     } catch (error) {
       console.log(error);
     }
