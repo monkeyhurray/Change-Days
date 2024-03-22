@@ -14,7 +14,6 @@ import {
 } from "@/components/createChallenge/createCalendar";
 
 import camera from "../../../public/camera.jpg";
-import { postCreateChallengeData } from "@/components/hooks/useChallengeMutation";
 import { useRouter } from "next/navigation";
 
 type FrequencyIds = 1 | 2 | 3 | 4 | 5 | 6 | 7;
