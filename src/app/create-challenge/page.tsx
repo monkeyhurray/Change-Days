@@ -155,21 +155,31 @@ const CreateChallengePage = () => {
       // TODO - img 업로드 실패 시 처리
       if (!uploadedImageUrl) return;
       await insertThumbnailUrlToDatabase(uploadedImageUrl);
-
-      alert("이미지가 성공적으로 업로드되었습니다.");
     } catch (error) {
       alert(error);
     }
   };
 
   const handleClickEvent = async (e: MouseEvent<HTMLButtonElement>) => {
+    if (
+      title.trim() !== "" &&
+      introduce.trim() !== "" &&
+      endDate.trim() !== "" &&
+      uploadImg == null
+    ) {
+      alert("등록 되었습니다.");
+    } else {
+      alert("누락된 값을 확인해 주세요!");
+      return;
+    }
+
     e.preventDefault();
     await handleSubmit();
     router.push("/");
   };
 
   return (
-    <form className=" mt-8">
+    <form onSubmit={(e) => e.preventDefault()} className=" mt-8">
       {" "}
       <div className=" ml-96">
         <div className="flex mb-5">
