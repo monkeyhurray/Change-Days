@@ -31,9 +31,9 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
       {items.map((item: ChallengeListRow) => (
         <SwiperSlide key={item.id}>
           <Link href={`/challenge/${item.id}`} className=" bg-blue-100">
-            <Image
+            <img
               className="bg-black"
-              src="/challenge.jpeg"
+              src={item.thumbnail ? item.thumbnail : "/challenge.jpeg"}
               alt="vercel"
               width="300"
               height="300"
