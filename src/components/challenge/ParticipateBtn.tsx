@@ -10,6 +10,7 @@ const ParticipateBtn = ({ challengeId }: props) => {
   const [userData, setUserData] = useState<User | null>();
   const [isExistData, setIsExistData] = useState(false);
   const [isJoinClick, setIsJoinClick] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const { data: userData, error: error } = await supabase.auth.getUser();
@@ -50,24 +51,30 @@ const ParticipateBtn = ({ challengeId }: props) => {
     } else {
       setIsExistData(false);
     }
+    setIsLoading(true);
   }
   useEffect(() => {
     if (userData) {
-      console.log(checkDataExists(challengeId, userData.id));
+      checkDataExists(challengeId, userData.id);
     }
   }, [userData, isJoinClick]);
 
   return (
     <>
-      {isExistData ? (
-        <p className="text-center font-bold">참가중인 챌린지입니다</p>
-      ) : (
-        <div onClick={onSubmitHandler} className="text-xl text-center ">
-          <span className="mr-3 text-white bg-black px-5 py-3 rounded-xl cursor-pointer">
-            참가하기
-          </span>
+      {isLoading && (
+        <div>
+          {isExistData ? (
+            <p className="text-center font-bold">참가중인 챌린지입니다</p>
+          ) : (
+            <div onClick={onSubmitHandler} className="text-xl text-center ">
+              <span className="mr-3 text-white bg-black px-5 py-3 rounded-xl cursor-pointer">
+                참가하기
+              </span>
+            </div>
+          )}
         </div>
       )}
+      s
     </>
   );
 };
