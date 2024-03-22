@@ -1,18 +1,22 @@
 "use client";
 
 import { DateTime } from "luxon";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { useRef } from "react";
 import Link from "next/link";
-
 import Image from "next/image";
+
+import { supabase } from "@/supabase/supabase";
 
 import {
   frequencyArr,
   periodArr,
-} from "@/components/createChallenge/noCreateCalendar";
+} from "@/components/createChallenge/createCalendar";
 
-import { useCreateMutation } from "@/components/hooks/useChallengeMutation";
+import camera from "../../../public/camera.jpg";
+import { postCreateChallengeData } from "@/components/hooks/useChallengeMutation";
+import { useRouter } from "next/navigation";
+
 type FrequencyIds = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 type FrequencyChallenge = {
@@ -29,28 +33,21 @@ type PeriodChallenge = {
 };
 
 const CreateChallengePage = () => {
-  const imgFalseRef = useRef<HTMLImageElement>(null);
-  const imgTrueRef = useRef<HTMLImageElement>(null);
   const dt = DateTime.now();
-  const [title, setTitle] = useState("");
-  const [textAreaAuthorize, setTextAreaAuthorize] = useState("");
+  const [name, setName] = useState("");
   const [frequency, setFrequency] = useState("매일");
   const [period, setPeriod] = useState("");
   const [periodNum, setPeriodNum] = useState(0);
   const [startDate, setStartDate] = useState("");
   const [startToday, setStartToday] = useState("");
   const [monthWeek, setMonthWeek] = useState(9);
-  const [exampleFalseImg, setExampleFalseImg] = useState(
-    "https://newsimg-hams.hankookilbo.com/2023/06/09/3a4636e2-63f3-4aba-af1e-8f08e469f12d.jpg"
-  );
-  const [exampleTrueImg, setExampleTrueImg] = useState(
-    "https://image.news1.kr/system/photos/2022/3/21/5278974/article.jpg/dims/optimize"
-  );
-  const [img, setImg] = useState("");
+  const [introduce, setIntroduce] = useState("");
+  const [prevImage, setPrevImage] = useState("");
+  const [uploadImg, setUploadImg] = useState<File | null>(null);
 
-  const postChallengeMutation = useCreateMutation();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
   const arr = Array.from({ length: 7 }, (v, i) => i++);
-
   const frequencyFunc = (id: FrequencyIds) => {
     const frequencyArrFilter = frequencyArr.find(
       (item) => item.id === id
@@ -69,30 +66,19 @@ const CreateChallengePage = () => {
 
   const onclickStartDay = (idx: number) => {
     setMonthWeek(idx);
+
     const plusDt = dt.plus({ days: idx + periodNum });
     const todayDt = dt.plus({ days: idx });
+
     const laterDate = plusDt.month + "월" + plusDt.day + "일";
     setStartToday(`${todayDt.month}월${todayDt.day}일`);
     setStartDate(laterDate);
   };
-
-  const readFalseImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
-
-    const imageFile = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (event: ProgressEvent<FileReader>) => {
-      if (!event || !event.target) return;
-      if (typeof event.target.result !== "string" || !imgFalseRef.current)
-        return;
-
-      imgFalseRef.current.src = event.target.result as string;
-    };
-
-    reader.readAsDataURL(imageFile);
+  const handleClickEvent = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    createChallengeBtn();
+    router.push("/");
   };
-
   const readTrueImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
 
@@ -101,18 +87,49 @@ const CreateChallengePage = () => {
 
     reader.onload = (event: ProgressEvent<FileReader>) => {
       if (!event || !event.target) return;
-      if (typeof event.target.result !== "string" || !imgTrueRef.current)
-        return;
+      if (typeof event.target.result !== "string" || !fileRef.current) return;
 
-      imgTrueRef.current.src = event.target.result as string;
+      fileRef.current.src = event.target.result as string;
+    };
+    setUploadImg(imageFile);
+
+    console.log(imageFile);
+    console.log(imageFile.name);
+    reader.readAsDataURL(imageFile);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setPrevImage(reader.result as string);
+      };
+    });
+  };
+
+  const toUseStorage = async () => {
+    try {
+      const { error } = await supabase.storage
+        .from("images")
+        .upload(("challenge/" + uploadImg?.name) as string, uploadImg as File, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (error) {
+        alert(error);
+        return console.log(error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const createChallengeBtn = async () => {
+    const newChallenge: { name: string; frequency: string } = {
+      name,
+      frequency,
     };
 
-    reader.readAsDataURL(imageFile);
-  };
-  const createChallengeBtn = () => {
-    setTitle("");
-    setTextAreaAuthorize("");
-    postChallengeMutation.mutate();
+    await toUseStorage();
+    await postCreateChallengeData(newChallenge);
+    setName("");
   };
 
   return (
@@ -123,9 +140,9 @@ const CreateChallengePage = () => {
           <h1>제목:&nbsp;</h1>
           <input
             className="border border-black-700 rounded border-black"
-            value={title}
+            value={name}
             required
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <h1 className="mb-5">인증 빈도:&nbsp;</h1>
@@ -150,7 +167,7 @@ const CreateChallengePage = () => {
             return (
               <div key={item.id}>
                 {frequency === item.value ? (
-                  <div>인증 요일은 {item.certificationDays} </div>
+                  <div>인증 요일은 {item.certificationDays} 입니다. </div>
                 ) : (
                   <></>
                 )}
@@ -175,11 +192,6 @@ const CreateChallengePage = () => {
             );
           })}
         </div>
-        {/* <div>인증 가능 시간</div>
-        <div className="h-20 w-44 border border-black-700 rounded border-black">
-          <button>시작 시간&nbsp;|</button>
-          <button>&nbsp;종료 시간</button>
-        </div> */}
         <h1 className="mb-3">시작일:&nbsp;</h1>
         <div className="mb-3 mt-1 flex">
           {arr.map((num) => {
@@ -202,57 +214,44 @@ const CreateChallengePage = () => {
             ? `${startToday} ~ ${startDate}`
             : ""}
         </h1>
-        <div>
-          <div className="mb-3">인증 방법</div>
-          <textarea
-            className="h-28 w-6/12 border border-black-700 rounded border-black"
-            value={textAreaAuthorize}
-            placeholder="예) 오늘 날짜와 걸음 수가 적힌 만보기 캡쳐 화면 업로드"
-            required
-            onChange={(e) => setTextAreaAuthorize(e.target.value)}
-          />
-        </div>
-
-        <label>나쁜 예시 사진</label>
-        <div>
+        <div className="flex">
           <input
+            id="upload"
+            ref={fileRef}
             type="file"
-            onChange={(e) => readFalseImage(e)}
-            accept="image/*"
-          />
-
-          <div>
-            <img
-              ref={imgFalseRef}
-              src={exampleFalseImg}
-              width={200}
-              height={200}
-              alt="img"
-            />
-          </div>
-        </div>
-
-        <div>
-          <input
-            type="file"
+            className="hidden"
             onChange={(e) => readTrueImage(e)}
             accept="image/*"
           />
 
-          <div>
-            <img
-              ref={imgTrueRef}
-              src={exampleTrueImg}
-              width={200}
-              height={200}
-              alt="img"
+          <label htmlFor="upload" className="cursor-pointer">
+            <Image
+              className="inline"
+              width={60}
+              height={60}
+              src={camera}
+              alt="사진"
             />
-          </div>
+          </label>
+
+          {prevImage !== "" ? (
+            <Image src={prevImage} width={60} height={60} alt="보여줄 사진" />
+          ) : (
+            <></>
+          )}
         </div>
 
-        <h1 className="mt-5 mb-5">진짜 인증 사진</h1>
-        <img width={150} height={100} src={img} alt="진짜 이미지" />
-        <input type="file" />
+        <div>
+          <div className="mb-3">소개</div>
+          <textarea
+            className="h-28 w-6/12 border border-black-700 rounded border-black"
+            value={introduce}
+            placeholder="예) 하루에 10키로 뛰기"
+            required
+            onChange={(e) => setIntroduce(e.target.value)}
+          />
+        </div>
+
         <div>
           <Link
             className="inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
@@ -260,13 +259,12 @@ const CreateChallengePage = () => {
           >
             이전
           </Link>
-          <Link
+          <button
             className="inline-flex items-center h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800"
-            href="/"
-            onClick={createChallengeBtn}
+            onClick={handleClickEvent}
           >
             완료
-          </Link>
+          </button>
         </div>
       </div>
     </div>
