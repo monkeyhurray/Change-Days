@@ -4,17 +4,17 @@ type TimeUtilFormat = {
   formatStartDate: string;
   formatEndDate: string;
   durationMessage: string;
-  formattedCreatedAt: string; // formattedCreatedAt를 반환 형식에 추가
+  formattedCreatedAt: string; 
 };
 
 export const timeUtil = (
   startIso: string,
   endIso: string,
-  createdAtIso: string // created_at을 인수로 전달
+  createdAtIso: string 
 ): TimeUtilFormat => {
   const startDate = DateTime.fromISO(startIso);
   const endDate = DateTime.fromISO(endIso);
-  const createdAtDate = DateTime.fromISO(createdAtIso); // created_at을 DateTime으로 변환
+  const createdAtDate = DateTime.fromISO(createdAtIso); 
 
   const formatStartDate = startDate.toFormat("M월 d일");
   const formatEndDate = endDate.toFormat("M월 d일");
@@ -47,5 +47,5 @@ export const timeUtil = (
     formatEndDate,
     durationMessage,
     formattedCreatedAt,
-  }; // formattedCreatedAt를 반환 객체에 포함
+  }; 
 };

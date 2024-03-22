@@ -1,7 +1,6 @@
 "use client";
 import { supabase } from "@/supabase/supabase";
 import { timeUtil } from "@/utils/timeutils";
-import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 
 type Challenge = {
@@ -10,6 +9,7 @@ type Challenge = {
   start_date: string;
   end_date: string;
   thumbnail: string;
+  createdAt : string
 };
 
 type UserChallenge = {
@@ -37,7 +37,7 @@ const Challenges = () => {
           id, 
           challenge_id,
           user_profile_id,
-          challenges 
+          challenges :challenge_id (*)
         `
           )
           .eq("user_profile_id", userId);
@@ -46,7 +46,6 @@ const Challenges = () => {
           console.error("에러발생함", error);
           return;
         }
-        console.log('data', data);
         setChallenges(data);
       }
     };
@@ -63,7 +62,7 @@ const Challenges = () => {
       <ul className="flex flex-col justify-center items-center gap-8">
         {challenges.length > 0 ? (
           challenges.map((item) => {
-            const {formatStartDate, formatEndDate, durationMessage} = timeUtil(item.challenges.start_date, item.challenges.end_date)
+            const {formatStartDate, formatEndDate, durationMessage, formattedCreatedAt } = timeUtil(item.challenges.start_date, item.challenges.end_date, item.challenges.createdAt)
 
             return (
               <div className="flex justify-between gap-8" key={item.challenges.id}>
@@ -76,6 +75,7 @@ const Challenges = () => {
                 <div>
                   <p>{item.challenges.name} {durationMessage}</p>
                   <p>{formatStartDate} ~ {formatEndDate} </p>
+                  <p> 생성일자 {formattedCreatedAt}</p>
                 </div>
               </div>
             );
