@@ -66,16 +66,16 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
     >
       {items.map((item: ChallengeListRow, index: number) => (
         <SwiperSlide key={item.id}>
-          <Link href={`/challenge/${item.id}`} className=" bg-blue-100">
-            <img
-              className="bg-black"
-              src={item.thumbnail ? item.thumbnail : "/challenge.jpeg"}
-              alt="vercel"
-              width="300"
-              height="300"
-            />
+          <Link className="block h-72" href={`/challenge/${item.id}`}>
+            <div style={{ height: "200px" }} className="h-50 relative mb-3">
+              <img
+                className="object-cover h-full w-full"
+                src={item.thumbnail ? item.thumbnail : "/challenge.jpeg"}
+                alt="vercel"
+              />
+            </div>
             <p className="text-m mb-1">{userData[index]?.name}</p>
-            <p className="text-xl mb-1">{item.name}</p>
+            <p className="text-xl mb-2">{item.name}</p>
             <p>
               <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
                 {item.start_date}-{item.end_date}
