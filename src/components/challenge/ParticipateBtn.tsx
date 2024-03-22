@@ -9,6 +9,7 @@ type props = {
 const ParticipateBtn = ({ challengeId }: props) => {
   const [userData, setUserData] = useState<User | null>();
   const [isExistData, setIsExistData] = useState(false);
+  const [isJoinClick, setIsJoinClick] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const { data: userData, error: error } = await supabase.auth.getUser();
@@ -27,6 +28,7 @@ const ParticipateBtn = ({ challengeId }: props) => {
         console.log("참가하기 실패");
       } else {
         console.log("참가 성공");
+        setIsJoinClick(true);
       }
     }
   };
@@ -53,7 +55,7 @@ const ParticipateBtn = ({ challengeId }: props) => {
     if (userData) {
       console.log(checkDataExists(challengeId, userData.id));
     }
-  }, [userData]);
+  }, [userData, isJoinClick]);
 
   return (
     <>

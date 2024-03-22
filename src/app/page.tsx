@@ -1,15 +1,8 @@
-import MainSlider from "@/components/common/MainSlider";
-import { FaPlus } from "react-icons/fa6";
-import { supabase } from "@/supabase/supabase";
 import { Tables } from "@/types/supabase";
 import Search from "@/components/home/Search";
-import Link from "next/link";
+import HomeChallenges from "@/components/common/HomeChallenges";
 export type ChallengeListRow = Tables<"challenges">;
-export default async function Home() {
-  const { data, error } = await supabase
-    .from<any, ChallengeListRow>("challenges")
-    .select("*");
-  //console.log("data", data);
+export default function Home() {
   return (
     <div className="mt-2">
       <section className="filter grayscale bg-[url('/mainImg.jpg')] relative bg-opacity-50 bg-[center_top_-7rem] bg-cover h-96 flex items-center justify-center bg-gray-200">
@@ -21,20 +14,7 @@ export default async function Home() {
           <Search />
         </div>
       </section>
-      <section className="mt-20">
-        <div className="flex justify-between">
-          <h1 className="mb-10 text-2xl font-bold">진행중인 챌린지</h1>
-          <p className="text-xl flex items-center">
-            <span className="mr-2">
-              <FaPlus />
-            </span>
-            <Link href="/create-challenge">
-              <span>챌린지 개설하기</span>
-            </Link>
-          </p>
-        </div>
-        <MainSlider items={data} />
-      </section>
+      <HomeChallenges />
     </div>
   );
 }
