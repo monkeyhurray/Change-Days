@@ -1,5 +1,6 @@
 "use client";
 import { supabase } from "@/supabase/supabase";
+import { timeUtil } from "@/utils/timeutils";
 import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 
@@ -21,15 +22,14 @@ type UserChallenge = {
 };
 
 const Challenges = () => {
-
   const [challenges, setChallenges] = useState<UserChallenge[]>([]);
 
   useEffect(() => {
     const fetchChallenges = async () => {
       const { data } = await supabase.auth.getSession();
-      const userData = data.session?.user.id;
+      const userId = data.session?.user.id;
 
-      if (userData) {
+      if (userId) {
         const { data, error } = await supabase
           .from("user_challenges")
           .select(
@@ -37,15 +37,16 @@ const Challenges = () => {
           id, 
           challenge_id,
           user_profile_id,
-          challenges:challenge_id (*)  // challenges 테이블과 조인
+          challenges 
         `
           )
-          .eq("user_profile_id", userData);
+          .eq("user_profile_id", userId);
 
         if (error) {
           console.error("에러발생함", error);
           return;
         }
+        console.log("data", data);
         setChallenges(data);
       }
     };
@@ -54,37 +55,20 @@ const Challenges = () => {
 
   console.log("올바르게 불러와지는 지 체크임", challenges);
 
-  
-
   return (
     <div className="min-w-120">
       <h2 className="flex justify-center">Challenges</h2>
       <ul className="flex flex-col justify-center items-center gap-8">
         {challenges.length > 0 ? (
           challenges.map((item) => {
-            const startDate  = DateTime.fromISO(item.challenges.start_date)
-            const endDate = DateTime.fromISO(item.challenges.end_date)
-
-            const formatStartDate = startDate.toFormat('M월 d일')
-            const formatendtDate = endDate.toFormat('M월 d일')
-
-            const diff = endDate.diff(startDate, ['days'])
-            const diffDays = diff.days
-
-            const weeks = Math.floor(diffDays / 7)
-            const days = diffDays % 7
-
-            let durationMessage = `${diffDays}일`
-
-            if (weeks > 0) {
-              durationMessage = `${weeks}주`
-              if (days > 0) {
-                durationMessage += `${days}일`
-              }
-            }
+            const { formatStartDate, formatEndDate, durationMessage } =
+              timeUtil(item.challenges.start_date, item.challenges.end_date);
 
             return (
-              <div className="flex justify-between gap-8" key={item.challenges.id}>
+              <div
+                className="flex justify-between gap-8"
+                key={item.challenges.id}
+              >
                 <img
                   src={`${item.challenges.thumbnail}`}
                   alt="섬네일 이미지"
@@ -92,14 +76,18 @@ const Challenges = () => {
                   height={125}
                 />
                 <div>
-                  <p>{item.challenges.name} {durationMessage}</p>
-                  <p>{formatStartDate} ~ {formatendtDate} </p>
+                  <p>
+                    {item.challenges.name} {durationMessage}
+                  </p>
+                  <p>
+                    {formatStartDate} ~ {formatEndDate}{" "}
+                  </p>
                 </div>
               </div>
             );
           })
         ) : (
-          <p>도전중인 챌린지가 존재하지 않아요</p>
+          <p>도전중인 챌린지가 존재하지 않아요 </p>
         )}
       </ul>
     </div>

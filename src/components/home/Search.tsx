@@ -10,7 +10,15 @@ const Search = () => {
   const { setSearchText } = useSearchStore((state) => state);
 
   return (
-    <div className="flex">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!currentSearchText) return;
+        setSearchText(currentSearchText);
+        router.push("/search");
+      }}
+      className="flex"
+    >
       <input
         type="text"
         className="px-5 py-3 w-80"
@@ -20,17 +28,10 @@ const Search = () => {
           setCurrentSearchText(e.target.value);
         }}
       ></input>
-      <button
-        onClick={() => {
-          if (!currentSearchText) return;
-          setSearchText(currentSearchText);
-          router.push("/search");
-        }}
-        className="bg-white text-gray-500 px-3"
-      >
+      <button className="bg-white text-gray-500 px-3">
         <IoIosSearch size={30} color="inherit" />
       </button>
-    </div>
+    </form>
   );
 };
 

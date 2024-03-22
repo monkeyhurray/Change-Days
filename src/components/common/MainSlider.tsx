@@ -1,14 +1,14 @@
-"use client";
+'use client';
 // Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
-import "swiper/css";
+import 'swiper/css';
 
-import React, { PropsWithChildren } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { ChallengeListRow } from "@/app/page";
+import React, { PropsWithChildren } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { ChallengeListRow } from '@/app/page';
 type Item = {
   name: string;
   id: number;
@@ -25,15 +25,15 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
     <Swiper
       spaceBetween={30}
       slidesPerView={4}
-      onSlideChange={() => console.log("slide change")}
+      onSlideChange={() => console.log('slide change')}
       onSwiper={(swiper) => console.log(swiper)}
     >
       {items.map((item: ChallengeListRow) => (
         <SwiperSlide key={item.id}>
           <Link href={`/challenge/${item.id}`} className=" bg-blue-100">
-            <Image
+            <img
               className="bg-black"
-              src="/challenge.jpeg"
+              src={item.thumbnail ? item.thumbnail : "/challenge.jpeg"}
               alt="vercel"
               width="300"
               height="300"
@@ -44,7 +44,7 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
               <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
                 {item.start_date}-{item.end_date}
               </span>
-              <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
+              <span className='bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700'>
                 {item.frequency}
               </span>
             </p>

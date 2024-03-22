@@ -7,10 +7,12 @@ type props = {
 };
 const ChallengePage = async ({ params }: props) => {
   const id = params.id;
+
   const { data, error } = await supabase
     .from<any, ChallengeListRow>("challenges")
     .select("*")
     .eq("id", id);
+
   if (error) {
     console.log(error.message);
   }

@@ -2,7 +2,6 @@
 
 import UserData, { UserDataProps } from "@/components/mypage/UserData";
 import { supabase } from "@/supabase/supabase";
-
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
