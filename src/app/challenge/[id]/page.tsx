@@ -14,7 +14,9 @@ const ChallengePage = ({ params }: Props) => {
   const id = params.id;
   const [challenge, setChallenge] = useState<ChallengeListRow | null>(null);
   const [createdByUser, setCreatedByUser] = useState<string | null>(null);
-  const [durationMessage, setDurationMessage] = useState<string> ('')
+  const [durationMessage, setDurationMessage] = useState<string>('')
+  const [formattedStartDate, setFormattedStartDate] = useState<string>('');
+  const [formattedEndDate, setFormattedEndDate] = useState<string>('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,8 +39,10 @@ const ChallengePage = ({ params }: Props) => {
       setChallenge(challengeData);
 
        if (challengeData) {
-        const { durationMessage } = timeUtil(challengeData.start_date, challengeData.end_date, challengeData.created_at);
+        const { formatStartDate, formatEndDate, durationMessage } = timeUtil(challengeData.start_date, challengeData.end_date, challengeData.created_at);
          setDurationMessage(durationMessage);
+         setFormattedStartDate(formatStartDate); // 날짜 형식 저장
+        setFormattedEndDate(formatEndDate);
          console.log('며칠하니',durationMessage)
       }
 
@@ -78,7 +82,7 @@ const ChallengePage = ({ params }: Props) => {
               {durationMessage}
             </span>
             <span className="mr-3 text-white bg-gray-600 p-2 rounded-xl">
-              {challenge.start_date}-{challenge.end_date}
+              {formattedStartDate}-{formattedEndDate}
             </span>
           </p>
           <span>작성자 : {createdByUser}</span> {/* 작성자 표시 */}
