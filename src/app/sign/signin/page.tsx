@@ -115,10 +115,12 @@ const SignInPage = () => {
             value={email}
             onClear={handleEmailFieldClear}
             onChange={handleSubmitEmail}
-            placeholder='ex. changedays@gmail.com'
+            placeholder='Enter your email'
           />
           {!emailValid && (
-            <p className='text-red-500'>* 유효한 이메일을 입력해주세요.</p>
+            <p className='text-red-500'>
+              * 유효한 이메일 방식으로 입력해주세요.
+            </p>
           )}
         </div>
 
@@ -131,7 +133,7 @@ const SignInPage = () => {
               variant='bordered'
               value={password}
               onChange={handleSubmitPassword}
-              placeholder='ex. changedays!1234'
+              placeholder='••••••••'
               endContent={
                 <button
                   className='focus:outline-none'

@@ -62,7 +62,7 @@ const SignUpPage = () => {
       if (data.user && data.user.id) {
         const { error: insertError } = await supabase.from('users').insert([
           {
-            uid: data.user.id, // Supabase Auth 사용자 ID를 uid 필드에 저장
+            uid: data.user.id,
             nickname: '원숭이',
             email: data.user.email,
           },
@@ -134,10 +134,12 @@ const SignUpPage = () => {
             value={email}
             onClear={handleEmailFieldClear}
             onChange={handleSubmitEmail}
-            placeholder='ex. changedays@gmail.com'
+            placeholder='Enter your email'
           />
           {!emailValid && (
-            <div className='text-red-500'>* 유효한 이메일을 입력해주세요.</div>
+            <div className='text-red-500'>
+              * 유효한 이메일 방식으로 입력해주세요.
+            </div>
           )}
         </div>
 
@@ -150,7 +152,7 @@ const SignUpPage = () => {
               variant='bordered'
               value={password}
               onChange={handleSubmitPassword}
-              placeholder='ex. changedays!1234'
+              placeholder='••••••••'
               endContent={
                 <button
                   className='focus:outline-none'
