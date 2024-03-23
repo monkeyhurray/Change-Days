@@ -1,19 +1,15 @@
-
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "@/supabase/supabase";
-import CustomModal from "@/components/common/CustomModal";
-import { useParams, useRouter } from "next/navigation";
-import UploadModal from "@/components/common/UploadModal";
-import { UserDataProps } from "@/components/mypage/UserData";
+import { useRouter } from "next/navigation";
 
 const ProfilePage = () => {
   const [user, setUser] = useState<any | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const inputFileRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const fetchUserData = async () => {
-
     const { data, error } = await supabase.auth.getUser();
     if (data.user) {
       const { data: userData, error: userError } = await supabase
@@ -36,29 +32,33 @@ const ProfilePage = () => {
         console.error(error);
         return;
       }
-
       fetchUserData();
+      router.replace("/mypage");
     }
   };
-
   useEffect(() => {
     fetchUserData();
   }, []);
-
   const handleSubmitEvent = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const name = formData.get("name") as string;
     const url = imageUrl as string;
-    handleUpdateUser(name, url);
+    if (name === user.name && url === null) {
+      alert("변경된 데이터가 없습니다.");
+      return;
+    }
+    if (url) {
+      handleUpdateUser(name, url);
+    } else {
+      handleUpdateUser(name, user.url);
+    }
   };
-
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = (e) => setImageUrl(e.target?.result as string);
     reader.readAsDataURL(file);
@@ -89,7 +89,7 @@ const ProfilePage = () => {
                   <img
                     src={user.url}
                     alt="유저프로필"
-                    className="w-full h-full"
+                    className="w-full h-full cursor-pointer"
                   />
                 </span>
               </div>
@@ -122,7 +122,6 @@ const ProfilePage = () => {
               required
             />
           </div>
-
           <button
             type="submit"
             className="bg-black text-white font-bold py-2 px-4 rounded-md"
@@ -133,5 +132,4 @@ const ProfilePage = () => {
       </div>
     );
 };
-
 export default ProfilePage;

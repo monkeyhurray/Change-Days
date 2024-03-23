@@ -1,10 +1,8 @@
 "use client";
 
-import UserData, { UserDataProps } from "@/components/mypage/UserData";
+import  { UserDataProps } from "@/components/mypage/UserData";
 import { supabase } from "@/supabase/supabase";
-import { User } from "@supabase/supabase-js";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
 
@@ -13,7 +11,6 @@ const UserPage = () => {
 
   const fetchUserData = async () => {
     const { data, error } = await supabase.auth.getUser();
-    // console.log("user", data.user);
     if (data.user) {
       console.log("userId", data.user.id);
       const { data: userData, error: userError } = await supabase
@@ -26,9 +23,29 @@ const UserPage = () => {
     }
   };
 
+  const fetchChallenges = async() => {
+    const { data } = await supabase
+      .from("user_challenges")
+      .select(`
+      id,
+      challenge_id,
+      user_profile_id,
+      challenges : challenge_id(*)`)
+      .eq("user_profile_id", user)
+    
+    console.log('challenges', data)
+  }
+
+
+
   useEffect(() => {
     fetchUserData();
+    fetchChallenges()
   }, []);
+
+
+
+
 
   if (user) {
     return (
