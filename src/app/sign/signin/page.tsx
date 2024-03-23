@@ -3,6 +3,12 @@
 import React, { useState } from 'react';
 import { supabase } from '@/supabase/supabase';
 import { useRouter } from 'next/navigation';
+import { INVALID_LOGIN_CREDENTIALS } from '@/constants/errorCode';
+
+import { Input } from '@nextui-org/react';
+import { EyeFilledIcon } from '../EyeFilledIcon';
+import { EyeSlashFilledIcon } from '../EyeSlashFilledIcon';
+import { Button } from '@nextui-org/react';
 
 const SignInPage = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +17,7 @@ const SignInPage = () => {
   const [pwValid, setPwValid] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isVisible, setIsVisible] = React.useState(false);
 
   const router = useRouter();
 
@@ -26,7 +33,7 @@ const SignInPage = () => {
   const validatePassword = (password: string) => {
     const regExp =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-    if (password.length === 0) {
+    if (!password.length) {
       setPwValid(true);
       return;
     }
@@ -51,9 +58,9 @@ const SignInPage = () => {
 
       console.log('로그인 처리 후 확인 데이터 => ', data);
 
-      if (error && error.message === 'Invalid login credentials') {
+      if (error && error.message === INVALID_LOGIN_CREDENTIALS) {
         alert(
-          ' 아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.'
+          '아이디(로그인 전용 아이디) 또는 비밀번호를 잘못 입력했습니다. 입력하신 내용을 다시 확인해주세요.'
         );
         console.log(error);
         return;
@@ -63,62 +70,101 @@ const SignInPage = () => {
       setPassword('');
       router.replace('/');
     } catch (error: any) {
-      setError(error.error_description || error.message);
-      alert('로그인 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.');
-      console.error(error);
-    } finally {
+      setError(error.message);
       setLoading(false);
+      console.error(error);
+      alert('로그인 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.');
     }
   };
 
+  const handleSubmitEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (error.length !== 0) {
+      setError('');
+    }
+    setEmail(e.target.value);
+    validateEmail(e.target.value);
+  };
+
+  const handleSubmitPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (error.length !== 0) {
+      setError('');
+    }
+    setPassword(e.target.value);
+    validatePassword(e.target.value);
+  };
+
+  const handleEmailFieldClear = () => {
+    setEmail('');
+    setEmailValid(true);
+  };
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
   return (
-    <div>
-      <h2>로그인</h2>
+    <div className='flex justify-center items-center flex-col space-y-4 w-full mx-auto my-40'>
+      <h1 className='text-4xl font-bold mb-2'>로그인</h1>
       <form onSubmit={handleSubmitSignIn}>
-        <div>
-          <label htmlFor='email'>Email:</label>
-          <input
+        <div className='mb-3'>
+          <Input
+            isClearable
+            className='max-w-xs w-full mb-1'
+            style={{ width: '330px' }}
             type='email'
+            label='Email'
+            variant='bordered'
             value={email}
-            placeholder='ex. changedays@gmail.com'
-            onChange={(e) => {
-              if (error.length !== 0) {
-                setError('');
-              }
-              setEmail(e.target.value);
-              validateEmail(e.target.value);
-            }}
+            onClear={handleEmailFieldClear}
+            onChange={handleSubmitEmail}
+            placeholder='Enter your email'
           />
+          {!emailValid && (
+            <p className='text-red-500'>
+              * 유효한 이메일 방식으로 입력해주세요.
+            </p>
+          )}
         </div>
-        {!emailValid && (
-          <p style={{ color: 'red' }}>* 유효한 이메일을 입력해주세요.</p>
-        )}
 
         <div>
-          <label htmlFor='password'>Password:</label>
-          <input
-            type='password'
-            value={password}
-            placeholder='ex. changedays!1234'
-            onChange={(e) => {
-              if (error.length !== 0) {
-                setError('');
+          <div className='mb-4'>
+            <Input
+              className='max-w-xs w-full mb-1'
+              type={isVisible ? 'text' : 'password'}
+              label='Password'
+              variant='bordered'
+              value={password}
+              onChange={handleSubmitPassword}
+              placeholder='••••••••'
+              endContent={
+                <button
+                  className='focus:outline-none'
+                  type='button'
+                  onClick={toggleVisibility}
+                >
+                  {isVisible ? (
+                    <EyeSlashFilledIcon className='text-2xl text-default-400 pointer-events-none' />
+                  ) : (
+                    <EyeFilledIcon className='text-2xl text-default-400 pointer-events-none' />
+                  )}
+                </button>
               }
-              setPassword(e.target.value);
-              validatePassword(e.target.value);
-            }}
-          />
-        </div>
-        {!pwValid && (
-          <p style={{ color: 'red' }}>
-            * 영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
-          </p>
-        )}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <div>
-          <button type='submit' disabled={loading}>
+            />
+            {!pwValid && (
+              <p className='text-red-500'>
+                * 영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
+              </p>
+            )}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+          </div>
+          <div className='flex justify-center'></div>
+          <Button
+            className='w-full max-w-xs'
+            type='submit'
+            disabled={loading}
+            color='primary'
+            variant='ghost'
+          >
             {loading ? '처리 중...' : '로그인하기'}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
