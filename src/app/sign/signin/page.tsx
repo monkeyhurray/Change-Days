@@ -7,7 +7,7 @@ import { INVALID_LOGIN_CREDENTIALS } from '@/constants/errorCode';
 
 import { Input } from '@nextui-org/react';
 import { EyeFilledIcon } from '../EyeFilledIcon';
-import { EyeSlashFilledIcon } from '../EyeSlashFilledIcon';
+import { EyeSlashFilledIcon } from '../EyeSlashFilledIcon';
 import { Button } from '@nextui-org/react';
 
 const SignInPage = () => {
