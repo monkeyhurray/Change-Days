@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ChallengeListRow } from "@/app/page";
 import ParticipateBtn from "@/components/challenge/ParticipateBtn";
 import { timeUtil } from "@/utils/timeutils";
+import UploadModal from "@/components/common/UploadModal";
 
 type Props = {
   params: { id: string };
@@ -13,29 +14,32 @@ const ChallengePage = ({ params }: Props) => {
   const id = params.id;
   const [challenge, setChallenge] = useState<ChallengeListRow | null>(null);
   const [createdByUser, setCreatedByUser] = useState<string | null>(null);
-  const [durationMessage, setDurationMessage] =useState<string> ('')
+  const [durationMessage, setDurationMessage] = useState<string> ('')
 
   useEffect(() => {
     const fetchData = async () => {
       const { data: challengeData, error: challengeError } = await supabase
         .from("challenges")
         .select(`*,
-          user_challenges!inner(*)`)
+           id, name, public, start_date, end_date, thumbnail, etc, created_by, created_at`)
         .eq("id", id)
-        .single();
+        .single()
 
       if (challengeError) {
         console.error(
           "챌린지 정보를 가져오는 중 오류가 발생했습니다.",
           challengeError
         );
+
         return;
       }
+      console.log('dsdasd',challengeData)
       setChallenge(challengeData);
 
        if (challengeData) {
         const { durationMessage } = timeUtil(challengeData.start_date, challengeData.end_date, challengeData.created_at);
-        setDurationMessage(durationMessage);
+         setDurationMessage(durationMessage);
+         console.log('며칠하니',durationMessage)
       }
 
       if (challengeData && challengeData.created_by) {
@@ -81,11 +85,13 @@ const ChallengePage = ({ params }: Props) => {
         </div>
         <div>
           <p className="py-5 text-xl font-bold">챌린지 소개</p>
+          <img src={challenge.thumbnail} width={550} height={550} alt="섬네일"/>
           <div className="h-36">{challenge.etc}</div>
         </div>
         <div>
-          <p className="py-5 text-xl font-bold">인증 방법</p>
+          <p className="py-5 text-xl font-bold">인증 하기</p>
           <div className="h-36">사진을 예쁘게 찍어서 올리세요</div>
+          <UploadModal handleYes={()=>{}}/>
         </div>
         <div>
           <p className="py-5 ">
