@@ -79,6 +79,7 @@ const SignUpPage = () => {
       setPassword('');
 
       alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
+      await supabase.auth.signOut();
       router.replace('/sign/signin');
 
       if (error && error.message === USER_ALREADY_REGISTERED) {
