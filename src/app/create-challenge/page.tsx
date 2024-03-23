@@ -1,15 +1,12 @@
 "use client";
-import { useEffect } from "react";
+
 import { DateTime } from "luxon";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useState, useEffect } from "react";
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
 import { supabase } from "@/supabase/supabase";
-
 import { periodArr } from "@/components/createChallenge/createCalendar";
-
 import camera from "../../../public/camera.jpg";
 import { useRouter } from "next/navigation";
 
@@ -33,6 +30,7 @@ const CreateChallengePage = () => {
   const [prevImage, setPrevImage] = useState("");
   const [uploadImg, setUploadImg] = useState<File | null>(null);
   const [createdBy, setCreatedBy] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const getUSerSession = async () => {
@@ -74,9 +72,40 @@ const CreateChallengePage = () => {
     const plusDt = dateTime.plus({ days: idx + periodNum });
     const todayDt = dateTime.plus({ days: idx });
 
-    const laterDate = plusDt.month + "월" + plusDt.day + "일";
-    setStartDate(`${todayDt.month}월${todayDt.day}일`);
-    setEndDate(laterDate);
+    let todayDtcalculateMonth;
+    let todayDtcalculateDay;
+
+    let plusDtCalculateMonth;
+    let plusDtCalculateDay;
+
+    if (plusDt.month < 10) {
+      plusDtCalculateMonth = "0" + plusDt.month;
+    } else {
+      plusDtCalculateMonth = plusDt.month;
+    }
+
+    if (plusDt.day < 10) {
+      plusDtCalculateDay = "0" + plusDt.day;
+    } else {
+      plusDtCalculateDay = plusDt.day;
+    }
+
+    if (todayDt.month < 10) {
+      todayDtcalculateMonth = "0" + todayDt.month;
+    } else {
+      todayDtcalculateMonth = todayDt.month;
+    }
+
+    if (todayDt.day < 10) {
+      todayDtcalculateDay = "0" + todayDt.day;
+    } else {
+      todayDtcalculateDay = todayDt.day;
+    }
+
+    setStartDate(
+      `${todayDt.year}-${todayDtcalculateMonth}-${todayDtcalculateDay}`
+    );
+    setEndDate(`${plusDt.year}-${plusDtCalculateMonth}-${plusDtCalculateDay}`);
   };
 
   const readImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +135,6 @@ const CreateChallengePage = () => {
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
     try {
-      console.log(fileName);
       const { error } = await supabase.storage
         .from("images")
         .upload(`challenge/${fileName}`, file, {
@@ -130,6 +158,7 @@ const CreateChallengePage = () => {
       .from("challenges")
       .insert([
         {
+          public: open,
           thumbnail: thumbnailUrl,
           etc: introduce,
           created_by: createdBy,
@@ -187,11 +216,25 @@ const CreateChallengePage = () => {
           <input
             className="border border-black-700 rounded border-black"
             value={title}
-            required
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-
+        <div className="flex">
+          <button
+            onClick={() => setOpen(true)}
+            className={
+              open ? `mr-2 ${ACTIVE_BUTTON}` : `mr-2 ${INACTIVE_BUTTON}`
+            }
+          >
+            공개
+          </button>
+          <button
+            onClick={() => setOpen(false)}
+            className={open ? `${INACTIVE_BUTTON}` : `${ACTIVE_BUTTON}`}
+          >
+            비공개
+          </button>
+        </div>
         <h1 className="mb-3">챌린지 기간:&nbsp;</h1>
         <div className="mb-3 mt-1 flex">
           {periodArr.map((item) => {
@@ -264,7 +307,6 @@ const CreateChallengePage = () => {
             className="p-4 h-28 w-6/12 border border-black-700 rounded border-black"
             value={introduce}
             placeholder="예) 하루에 10키로 뛰기"
-            required
             onChange={(e) => setIntroduce(e.target.value)}
           />
         </div>
