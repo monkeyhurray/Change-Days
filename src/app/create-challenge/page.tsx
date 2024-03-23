@@ -101,7 +101,7 @@ const CreateChallengePage = () => {
     });
   };
 
-  const toUseStorage = async (file: File) => {
+  const uploadImgStorage = async (file: File) => {
     const fileExt = file?.name.split(".").pop();
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
@@ -150,7 +150,7 @@ const CreateChallengePage = () => {
     if (!uploadImg) return;
 
     try {
-      const uploadedImageUrl = await toUseStorage(uploadImg);
+      const uploadedImageUrl = await uploadImgStorage(uploadImg);
 
       // TODO - img 업로드 실패 시 처리
       if (!uploadedImageUrl) return;
@@ -165,7 +165,7 @@ const CreateChallengePage = () => {
       title.trim() !== "" &&
       introduce.trim() !== "" &&
       endDate.trim() !== "" &&
-      uploadImg == null
+      uploadImg !== null
     ) {
       alert("등록 되었습니다.");
     } else {
