@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { supabase } from '@/supabase/supabase';
 import { useRouter } from 'next/navigation';
 import { INVALID_LOGIN_CREDENTIALS } from '@/constants/errorCode';
@@ -100,19 +100,6 @@ const SignInPage = () => {
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const [width, setWidth] = useState(0);
-
-  // 요소에 대한 참조 생성
-  const elementRef = useRef(null);
-
-  useEffect(() => {
-    // 컴포넌트가 마운트된 후 요소의 너비를 측정
-    if (elementRef.current) {
-      const elementWidth = elementRef.current.offsetWidth;
-      setWidth(elementWidth); // 측정한 너비를 상태에 저장
-    }
-  }, []); // 의존성 배열을 빈 배열로 설정하여 컴포넌트 마운트 시에만 실행
-
   return (
     <div className='flex justify-center items-center flex-col space-y-4 w-full mx-auto my-40'>
       <h1 className='text-4xl font-bold mb-2'>로그인</h1>
@@ -121,7 +108,7 @@ const SignInPage = () => {
           <Input
             isClearable
             className='max-w-xs w-full mb-1'
-            // style={{ width: '500px' }}
+            style={{ width: '330px' }}
             type='email'
             label='Email'
             variant='bordered'
@@ -130,10 +117,6 @@ const SignInPage = () => {
             onChange={handleSubmitEmail}
             placeholder='ex. changedays@gmail.com'
           />
-          <div ref={elementRef}>
-            * 영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
-          </div>
-          <p>요소의 너비: {width}px</p>
           {!emailValid && (
             <p className='text-red-500'>* 유효한 이메일을 입력해주세요.</p>
           )}
