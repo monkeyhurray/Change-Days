@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/supabase/supabase';
@@ -12,10 +12,10 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
     let checkUnmounted = false;
 
     const getUserSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      console.log("data => ", data);
-
       try {
+        const { data, error } = await supabase.auth.getSession();
+        console.log('data => ', data);
+
         if (!checkUnmounted) {
           const isLogin = data.session?.access_token ? true : false;
 
@@ -30,19 +30,20 @@ const MyPageLayout = ({ children }: { children: React.ReactNode }) => {
       } catch (error) {
         console.error(`Error: ${error}`);
         alert(
-          '로그인 상태가 불안정합니다. 새로고침 후에도 지속될 시,고객센터로 연락해주세요.'
+          '로그인 상태가 불안정합니다. 새로고침 후에도 지속될 시, 고객센터로 연락해주세요.'
         );
       }
     };
     getUserSession();
 
+    // cleanup함수
     return () => {
       checkUnmounted = true;
     };
   }, [router]);
 
   return (
-    <div className="p-7 pt-10 mt-5 mx-auto w-2/5 min-w-96 rounded-lg shadow-lg shadow-gray-500/50">
+    <div className='p-7 pt-10 mt-5 mx-auto w-2/5 min-w-96 rounded-lg shadow-lg shadow-gray-500/50'>
       {shouldRender && children}
     </div>
   );

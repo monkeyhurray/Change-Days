@@ -2,7 +2,9 @@
 
 import React, { useState } from 'react';
 import { supabase } from '@/supabase/supabase';
+
 import { useRouter } from 'next/navigation';
+import { USER_ALREADY_REGISTERED } from '@/constants/errorCode';
 
 const SignUpPage = () => {
   const [email, setEmail] = useState('');
@@ -51,23 +53,22 @@ const SignUpPage = () => {
 
       console.log('회원가입 처리 후 확인 데이터 => ', data);
 
-      if (error && error.message === 'User already registered') {
-        alert('이미 가입된 이메일입니다.');
-        console.log(error);
-        return;
-      }
-
       setEmail('');
       setPassword('');
 
       alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
       router.replace('/sign/signin');
+
+      if (error && error.message === USER_ALREADY_REGISTERED) {
+        alert('이미 가입된 이메일입니다.');
+        console.log(error);
+        return;
+      }
     } catch (error: any) {
-      setError(error.error_description || error.message);
+      setError(error.message);
       alert('회원가입 도중 오류가 발생하였습니다. 고객센터로 연락해주세요.');
       console.error(error);
-    } finally {
-      setLoading(false);
+      return;
     }
   };
 
@@ -91,7 +92,7 @@ const SignUpPage = () => {
           />
         </div>
         {!emailValid && (
-          <p style={{ color: 'red' }}>* 유효한 이메일을 입력해주세요.</p>
+          <p className='text-red-500'>* 유효한 이메일을 입력해주세요.</p>
         )}
 
         <div>
@@ -110,7 +111,7 @@ const SignUpPage = () => {
           />
         </div>
         {!pwValid && (
-          <p style={{ color: 'red' }}>
+          <p className='text-red-500'>
             * 영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.
           </p>
         )}
