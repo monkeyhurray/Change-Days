@@ -17,7 +17,6 @@ const ChallengePage = ({ params }: Props) => {
   const [durationMessage, setDurationMessage] = useState<string>('')
   const [formattedStartDate, setFormattedStartDate] = useState<string>('');
   const [formattedEndDate, setFormattedEndDate] = useState<string>('');
-  const [isChallengeActive, setIsChallengeActive] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {

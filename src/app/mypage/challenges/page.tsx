@@ -52,7 +52,7 @@ const Challenges = () => {
             const { formatStartDate, formatEndDate, durationMessage } = timeUtil(item.challenges.start_date, item.challenges.end_date, item.challenges.createdAt)
             return (
               <div
-                onClick={()=>handleGetChallengeButton(item.challenges.name)}
+                onClick={()=>handleGetChallengeButton(item.challenge_id)}
                 className="flex justify-between gap-8"
                 key={item.challenge_id}
               >
