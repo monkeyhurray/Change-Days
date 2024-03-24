@@ -17,6 +17,7 @@ const ChallengePage = ({ params }: Props) => {
   const [durationMessage, setDurationMessage] = useState<string>('')
   const [formattedStartDate, setFormattedStartDate] = useState<string>('');
   const [formattedEndDate, setFormattedEndDate] = useState<string>('');
+  const [isChallengeActive, setIsChallengeActive] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +42,7 @@ const ChallengePage = ({ params }: Props) => {
        if (challengeData) {
         const { formatStartDate, formatEndDate, durationMessage } = timeUtil(challengeData.start_date, challengeData.end_date, challengeData.created_at);
          setDurationMessage(durationMessage);
-         setFormattedStartDate(formatStartDate); // 날짜 형식 저장
+         setFormattedStartDate(formatStartDate); 
         setFormattedEndDate(formatEndDate);
          console.log('며칠하니',durationMessage)
       }
@@ -95,7 +96,6 @@ const ChallengePage = ({ params }: Props) => {
         <div>
           <p className="py-5 text-xl font-bold">인증 하기</p>
           <div className="h-36">사진을 예쁘게 찍어서 올리세요</div>
-          <UploadModal handleYes={()=>{}}/>
         </div>
         <div>
           <p className="py-5 ">
