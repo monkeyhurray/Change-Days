@@ -7,30 +7,43 @@ import { useEffect, useState } from "react";
 
 const ChallengePage = () => {
   const router = useRouter();
-  const { challengeId } = useParams()
+  const { id: challengeId } = useParams()
+  const [fulfillments, setFulfillments] = useState<any>([]);
   const [isDone, setIsDone] = useState(false);
 
+  
   useEffect(() => {
-    const fetchChallengeData = async () => {
+    const fetchFulfillments = async () => {
       if (!challengeId) return;
 
-      const { data, error } = await supabase
-        .from('user_fulfull')
-        .select('*')
+      const { data: userChallengeData, error: userChallengeError } = await supabase
+        .from('user_challenges')
+        .select('id')
         .eq('challenge_id', challengeId)
-        .single()
-      
-      if (error) {
-        console.error('fulfill 불러오는데 실패함', error)
+        .single();
+
+      if (userChallengeError) {
+        console.error(userChallengeError);
+        return;
       }
 
-      setIsDone(data?.isdone || false)
-    }
+      const { data: fulfillmentsData, error: fulfillmentsError } = await supabase
+        .from('user_fulfill')
+        .select('*')
+        .eq('user_challenge_id', userChallengeData.id);
 
+      if (fulfillmentsError) {
+        console.error(fulfillmentsError);
+        return;
+      }
 
-    fetchChallengeData()
-  },[challengeId])
+      setFulfillments(fulfillmentsData);
 
+      console.log(fulfillmentsData)
+    };
+
+    fetchFulfillments();
+  }, [challengeId]);
 
 
   const handleButtonClick = () => {
@@ -39,6 +52,21 @@ const ChallengePage = () => {
 
   return <div>
     <button onClick={handleButtonClick}>뒤로가기</button>
+    <div>
+      <h2> 참여도 </h2>
+      <ul>
+        {fulfillments.length > 0 ? (
+          fulfillments.map((fulfillment, index) => (
+            <li key={index}>
+              Date: {fulfillment.date}, Completed: {fulfillment.isdone ? 'Yes' : 'No'}
+            </li>
+          ))
+        ) : (
+          <p>아직 완료된 챌린지가 없습니다.</p>
+        )}
+      </ul>
+    </div>
+
   </div>
 
 
