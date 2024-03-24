@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@nextui-org/react";
 import { DateTime } from "luxon";
 import { MouseEvent, useState, useEffect } from "react";
 import { useRef } from "react";
@@ -210,44 +211,46 @@ const CreateChallengePage = () => {
   return (
     <form onSubmit={(e) => e.preventDefault()} className=" mt-8">
       {" "}
-      <div className=" ml-96">
-        <div className="flex mb-5">
+      <div className="ml-80">
+        <div className="mb-12 mt-10 ml-36 flex mb-5">
           <h1>제목:&nbsp;</h1>
           <input
-            className="border border-black-700 rounded border-black"
+            className="w-80 border border-black-700 rounded border-black"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
         <div className="flex">
-          <button
+          <Button
+            color={open ? "primary" : "default"}
+            className="mr-2"
+            variant={open ? "solid" : "ghost"}
             onClick={() => setOpen(true)}
-            className={
-              open ? `mr-2 ${ACTIVE_BUTTON}` : `mr-2 ${INACTIVE_BUTTON}`
-            }
           >
             공개
-          </button>
-          <button
+          </Button>
+          <Button
+            color={open ? "default" : "primary"}
+            className="mr-2"
+            variant={open ? "ghost" : "solid"}
             onClick={() => setOpen(false)}
-            className={open ? `${INACTIVE_BUTTON}` : `${ACTIVE_BUTTON}`}
           >
             비공개
-          </button>
+          </Button>
         </div>
-        <h1 className="mb-3">챌린지 기간:&nbsp;</h1>
+        <h1 className="mb-3 mt-4">챌린지 기간:&nbsp;</h1>
         <div className="mb-3 mt-1 flex">
           {periodArr.map((item) => {
             return (
               <div key={item.id}>
-                <button
-                  className={`mr-2 ${
-                    period === item.value ? ACTIVE_BUTTON : INACTIVE_BUTTON
-                  }`}
+                <Button
+                  color={period === item.value ? "primary" : "default"}
+                  className="mr-2"
+                  variant={period === item.value ? `solid` : `ghost`}
                   onClick={() => periodFunc(item.id)}
                 >
                   {item.value}
-                </button>
+                </Button>
               </div>
             );
           })}
@@ -258,15 +261,17 @@ const CreateChallengePage = () => {
           {arr.map((num) => {
             const nowMonthWeek = `${dateTime.month}월 ${dateTime.day + num}일`;
             return (
-              <button
-                className={`mr-2 ${
-                  monthWeek === num ? ACTIVE_BUTTON : INACTIVE_BUTTON
-                }`}
-                key={num}
-                onClick={() => onclickStartDay(num)}
-              >
-                {nowMonthWeek}
-              </button>
+              <div key={num}>
+                <Button
+                  key={num}
+                  color={monthWeek === num ? "primary" : "default"}
+                  className="mr-2"
+                  variant={monthWeek === num ? `solid` : `ghost`}
+                  onClick={() => onclickStartDay(num)}
+                >
+                  {nowMonthWeek}
+                </Button>{" "}
+              </div>
             );
           })}
         </div>
@@ -304,7 +309,7 @@ const CreateChallengePage = () => {
         <div>
           <div className="mb-3">소개</div>
           <textarea
-            className="p-4 h-28 w-6/12 border border-black-700 rounded border-black"
+            className="p-4 h-28 w-9/12 border border-black-700 rounded border-black"
             value={introduce}
             placeholder="예) 하루에 10키로 뛰기"
             onChange={(e) => setIntroduce(e.target.value)}
