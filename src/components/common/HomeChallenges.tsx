@@ -10,29 +10,31 @@ import MainSlider from "./MainSlider";
 const HomeChallenges = () => {
   const [data, setData] = useState<ChallengeListRow | any>([]);
   const [userData, setUserData] = useState<{ user: User | null }>();
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data, error } = await supabase
-        .from<any, ChallengeListRow>("challenges")
-        .select("*")
-        .order("created_at", { ascending: false });
-      console.log("data", data);
-      //  setData(data);
-      if (error) {
-        console.log("error", error);
-      }
-      setData(data);
-    };
-    fetchData();
-  }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      setUserData(data);
-    };
-    fetchData();
+  const fetchData = async () => {
+    const { data, error } = await supabase
+      .from<any, ChallengeListRow>("challenges")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.log("error", error);
+    } else if (data) {
+      const today = new Date();
+
+      const ongoingChallenges = data.filter((challenge) => {
+        const endDate = new Date(challenge.end_date);
+        return endDate >= today;
+      });
+
+      setData(ongoingChallenges);
+    }
+  };
+
+  fetchData();
   }, []);
+  
   return (
     <section className="mt-20">
       <div className="flex justify-between">
