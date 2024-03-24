@@ -1,22 +1,27 @@
 "use client";
-// Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
 import "swiper/css";
 
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ChallengeListRow } from "@/app/page";
 import { supabase } from "@/supabase/supabase";
+import { timeUtil } from "@/utils/timeutils";
+
+
 type Item = {
   name: string;
   id: number;
   userId: string;
-  period: string;
-  frequency: string;
 };
+
+type FormattedDateInfoItem = {
+  formatStartDate: string;
+  formatEndDate: string;
+  durationMessage: string;
+};
+
 
 type Props = {
   items: ChallengeListRow[] | any;
@@ -34,14 +39,14 @@ const fetchUserData = async (userId: string | null) => {
       return null;
     }
 
-    return data; // 사용자 정보 반환
+    return data; 
   }
 };
 
 const MainSlider = ({ items }: PropsWithChildren<Props>) => {
   const [userData, setUserData] = useState<{ name: string }[]>([]);
+  const [formattedDateInfo, setFormattedDateInfo] = useState<FormattedDateInfoItem[]>([]);
   useEffect(() => {
-    // MainSlider 컴포넌트가 렌더링될 때마다 사용자 정보를 가져오는 효과
     const fetchData = async () => {
       const userDataPromises = items.map((item: ChallengeListRow) =>
         fetchUserData(item.created_by)
@@ -51,11 +56,31 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
     };
 
     fetchData();
-  }, [items]); // items가 변경될 때마다 실행
+  }, [items]);
 
+  useEffect(() => {
+    const updateFormattedDateInfo = async () => {
+      const updatedInfo = await Promise.all(
+        items.map(async ( item :any ) => {
+          const { formatStartDate, formatEndDate, durationMessage } = timeUtil(item.start_date, item.end_date, item.created_at);
+          return { formatStartDate, formatEndDate, durationMessage };
+        })
+      );
+      setFormattedDateInfo(updatedInfo);
+    };
+
+    updateFormattedDateInfo();
+  }, [items]);
+  
+
+
+
+
+  
   useEffect(() => {
     console.log("userData", userData);
   }, [userData]);
+
 
   return (
     <Swiper
@@ -78,10 +103,10 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
             <p className="text-xl mb-2">{item.name}</p>
             <p>
               <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
-                {item.start_date}-{item.end_date}
+                {formattedDateInfo[index]?.formatStartDate}-{formattedDateInfo[index]?.formatEndDate}
               </span>
               <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
-                {item.frequency}
+                {formattedDateInfo[index]?.durationMessage}
               </span>
             </p>
           </Link>

@@ -38,8 +38,6 @@ const Challenges = () => {
     })
   }, []);
 
-  console.log("올바르게 불러와지는 지 체크임", challenges);
-
   const handleGetChallengeButton = (id : string) => {
     router.push(`/mypage/challenges/${id}`)
   }
@@ -51,14 +49,12 @@ const Challenges = () => {
       <ul className="flex flex-col justify-center items-center gap-8">
         {challenges.length > 0 ? (
           challenges.map((item) => {
-            const {formatStartDate, formatEndDate, durationMessage, formattedCreatedAt } = timeUtil(item.challenges.start_date, item.challenges.end_date, item.challenges.createdAt)
-
-
+            const { formatStartDate, formatEndDate, durationMessage } = timeUtil(item.challenges.start_date, item.challenges.end_date, item.challenges.createdAt)
             return (
               <div
-                onClick={()=>handleGetChallengeButton(item.challenges.id)}
+                onClick={()=>handleGetChallengeButton(item.challenges.name)}
                 className="flex justify-between gap-8"
-                key={item.challenges.id}
+                key={item.challenge_id}
               >
                 <img
                   src={`${item.challenges.thumbnail}`}
@@ -69,8 +65,6 @@ const Challenges = () => {
                 <div>
                   <p>{item.challenges.name} {durationMessage}</p>
                   <p>{formatStartDate} ~ {formatEndDate} </p>
-                  <p> 생성일자 {formattedCreatedAt}</p>
-
                 </div>
               </div>
             );

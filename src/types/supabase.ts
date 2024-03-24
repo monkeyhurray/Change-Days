@@ -119,21 +119,21 @@ export type Database = {
         Row: {
           created_at: string
           email: string | null
-          name: string | null
+          nickname: string | null
           uid: string
           url: string | null
         }
         Insert: {
           created_at?: string
           email?: string | null
-          name?: string | null
+          nickname?: string | null
           uid: string
           url?: string | null
         }
         Update: {
           created_at?: string
           email?: string | null
-          name?: string | null
+          nickname?: string | null
           uid?: string
           url?: string | null
         }
@@ -244,3 +244,5 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never
+
+    
