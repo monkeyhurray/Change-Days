@@ -15,7 +15,7 @@ const HomeChallenges = () => {
         .from<any, ChallengeListRow>("challenges")
         .select("*")
         .order("created_at", { ascending: false });
-      console.log("data", data);
+
       //  setData(data);
       if (error) {
         console.log("error", error);

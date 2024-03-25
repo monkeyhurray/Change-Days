@@ -1,13 +1,13 @@
-'use client';
-import { Swiper, SwiperSlide } from 'swiper/react';
+"use client";
+import { Swiper, SwiperSlide } from "swiper/react";
 
-import 'swiper/css';
+import "swiper/css";
 
-import React, { PropsWithChildren, useEffect, useState } from 'react';
-import Link from 'next/link';
-import { ChallengeListRow } from '@/app/page';
-import { supabase } from '@/supabase/supabase';
-import { timeUtil } from '@/utils/timeutils';
+import React, { PropsWithChildren, useEffect, useState } from "react";
+import Link from "next/link";
+import { ChallengeListRow } from "@/app/page";
+import { supabase } from "@/supabase/supabase";
+import { timeUtil } from "@/utils/timeutils";
 
 type Item = {
   name: string;
@@ -27,13 +27,13 @@ type Props = {
 const fetchUserData = async (userId: string | null) => {
   if (userId) {
     const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('uid', userId)
+      .from("users")
+      .select("*")
+      .eq("uid", userId)
       .single();
 
     if (error) {
-      console.error('사용자 정보를 가져오는 데 실패했습니다.', error);
+      console.error("사용자 정보를 가져오는 데 실패했습니다.", error);
       return null;
     }
 
@@ -76,35 +76,26 @@ const MainSlider = ({ items }: PropsWithChildren<Props>) => {
     updateFormattedDateInfo();
   }, [items]);
 
-  useEffect(() => {
-    console.log('userData', userData);
-  }, [userData]);
-
   return (
-    <Swiper
-      spaceBetween={30}
-      slidesPerView={4}
-      onSlideChange={() => console.log('slide change')}
-      onSwiper={(swiper) => console.log(swiper)}
-    >
+    <Swiper spaceBetween={30} slidesPerView={4}>
       {items.map((item: ChallengeListRow, index: number) => (
         <SwiperSlide key={item.id}>
-          <Link className='block h-72' href={`/challenge/${item.id}`}>
-            <div style={{ height: '200px' }} className='h-50 relative mb-3'>
+          <Link className="block h-72" href={`/challenge/${item.id}`}>
+            <div style={{ height: "200px" }} className="h-50 relative mb-3">
               <img
-                className='object-cover h-full w-full'
-                src={item.thumbnail ? item.thumbnail : '/challenge.jpeg'}
-                alt='vercel'
+                className="object-cover h-full w-full"
+                src={item.thumbnail ? item.thumbnail : "/challenge.jpeg"}
+                alt="vercel"
               />
             </div>
-            <p className='text-m mb-1'>{userData[index]?.name}</p>
-            <p className='text-xl mb-2'>{item.name}</p>
+            <p className="text-m mb-1">{userData[index]?.name}</p>
+            <p className="text-xl mb-2">{item.name}</p>
             <p>
-              <span className='bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700'>
+              <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
                 {formattedDateInfo[index]?.formatStartDate}-
                 {formattedDateInfo[index]?.formatEndDate}
               </span>
-              <span className='bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700'>
+              <span className="bg-gray-300 mr-3 rounded-lg px-2 py-1 text-gray-700">
                 {formattedDateInfo[index]?.durationMessage}
               </span>
             </p>

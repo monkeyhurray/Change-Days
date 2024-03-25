@@ -4,23 +4,20 @@ type TimeUtilFormat = {
   formatStartDate: string;
   formatEndDate: string;
   durationMessage: string;
-  formattedCreatedAt: string; 
+  formattedCreatedAt: string;
 };
 
 export const timeUtil = (
   startIso: string,
   endIso: string,
-  createdAtIso: string 
+  createdAtIso: string
 ): TimeUtilFormat => {
   const startDate = DateTime.fromISO(startIso).setLocale("ko");
   const endDate = DateTime.fromISO(endIso).setLocale("ko");
-  const createdAtDate = DateTime.fromISO(createdAtIso).setLocale("ko"); 
-
+  const createdAtDate = DateTime.fromISO(createdAtIso).setLocale("ko");
 
   const formatStartDate = startDate.toFormat("M월 d일");
   const formatEndDate = endDate.toFormat("M월 d일");
-  
-  console.log(formatStartDate, formatEndDate)
 
   const diff = endDate.diff(startDate, ["days"]);
   const diffDays = diff.days;
@@ -50,5 +47,5 @@ export const timeUtil = (
     formatEndDate,
     durationMessage,
     formattedCreatedAt,
-  }; 
+  };
 };

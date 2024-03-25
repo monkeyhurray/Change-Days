@@ -1,14 +1,14 @@
-'use client';
-import { supabase } from '@/supabase/supabase';
-import React, { useEffect, useState, useRef } from 'react';
-import { ChallengeListRow } from '@/app/page';
-import ParticipateBtn from '@/components/challenge/ParticipateBtn';
-import { timeUtil } from '@/utils/timeutils';
-import UploadModal from '@/components/common/UploadModal';
-import { Card, CardHeader, CardBody, Image } from '@nextui-org/react';
+"use client";
+import { supabase } from "@/supabase/supabase";
+import React, { useEffect, useState, useRef } from "react";
+import { ChallengeListRow } from "@/app/page";
+import ParticipateBtn from "@/components/challenge/ParticipateBtn";
+import { timeUtil } from "@/utils/timeutils";
+import UploadModal from "@/components/common/UploadModal";
+import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 // import camera from '../../../../public/camera.jpg';
 
-import { UserDataProps } from '@/components/mypage/UserData';
+import { UserDataProps } from "@/components/mypage/UserData";
 type Props = {
   params: { id: string };
 };
@@ -18,10 +18,10 @@ const ChallengePage = ({ params }: Props) => {
   const [challenge, setChallenge] = useState<ChallengeListRow | null>(null);
   const [user, setUser] = useState<UserDataProps | null>(null);
   const [createdByUser, setCreatedByUser] = useState<string | null>(null);
-  const [durationMessage, setDurationMessage] = useState<string>('');
-  const [formattedStartDate, setFormattedStartDate] = useState<string>('');
-  const [formattedEndDate, setFormattedEndDate] = useState<string>('');
-  const [prevImage, setPrevImage] = useState('');
+  const [durationMessage, setDurationMessage] = useState<string>("");
+  const [formattedStartDate, setFormattedStartDate] = useState<string>("");
+  const [formattedEndDate, setFormattedEndDate] = useState<string>("");
+  const [prevImage, setPrevImage] = useState("");
   const [uploadImg, setUploadImg] = useState<File | null>(null);
 
   const fileRef = useRef<HTMLInputElement>(null);
@@ -31,13 +31,13 @@ const ChallengePage = ({ params }: Props) => {
     console.log(data);
 
     if (data.user) {
-      console.log('userId', data.user.id);
+      console.log("userId", data.user.id);
       const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('uid, nickname', data.user.id)
+        .from("users")
+        .select("*")
+        .eq("uid, nickname", data.user.id)
         .single();
-      console.log('user', userData);
+      console.log("user", userData);
       setUser(userData);
     }
   };
@@ -45,12 +45,12 @@ const ChallengePage = ({ params }: Props) => {
   useEffect(() => {
     const fetchData = async () => {
       const { data: challengeData, error: challengeError } = await supabase
-        .from('challenges')
+        .from("challenges")
         .select(
           `*,
            id, name, public, start_date, end_date, thumbnail, etc, created_by, created_at`
         )
-        .eq('id', id)
+        .eq("id", id)
         .single();
 
       // const { data, error } = await supabase.auth.signUp({
@@ -71,13 +71,13 @@ const ChallengePage = ({ params }: Props) => {
 
       if (challengeError) {
         console.error(
-          '챌린지 정보를 가져오는 중 오류가 발생했습니다.',
+          "챌린지 정보를 가져오는 중 오류가 발생했습니다.",
           challengeError
         );
 
         return;
       }
-      console.log('dsdasd', challengeData);
+      console.log("dsdasd", challengeData);
       setChallenge(challengeData);
 
       if (challengeData) {
@@ -89,19 +89,19 @@ const ChallengePage = ({ params }: Props) => {
         setDurationMessage(durationMessage);
         setFormattedStartDate(formatStartDate);
         setFormattedEndDate(formatEndDate);
-        console.log('며칠하니', durationMessage);
+        console.log("며칠하니", durationMessage);
       }
 
       if (challengeData && challengeData.created_by) {
         const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('*')
-          .eq('uid', challengeData.created_by)
+          .from("users")
+          .select("*")
+          .eq("uid", challengeData.created_by)
           .single();
 
         if (userError) {
           console.error(
-            '사용자 정보를 가져오는 중 오류가 발생했습니다.',
+            "사용자 정보를 가져오는 중 오류가 발생했습니다.",
             userError
           );
           return;
@@ -123,7 +123,7 @@ const ChallengePage = ({ params }: Props) => {
 
     reader.onload = (event: ProgressEvent<FileReader>) => {
       if (!event || !event.target) return;
-      if (typeof event.target.result !== 'string' || !fileRef.current) return;
+      if (typeof event.target.result !== "string" || !fileRef.current) return;
 
       fileRef.current.src = event.target.result as string;
     };
@@ -144,33 +144,33 @@ const ChallengePage = ({ params }: Props) => {
   return (
     <>
       <div>
-        <div className='border-b-2 border-b-gray-300 py-3'>
-          <p className='mb-2'>
-            <span className='mr-5 text-2xl'>{challenge.name}</span>
-            <span className='mr-3 text-white bg-gray-600 p-2 rounded-xl'>
+        <div className="border-b-2 border-b-gray-300 py-3">
+          <p className="mb-2">
+            <span className="mr-5 text-2xl">{challenge.name}</span>
+            <span className="mr-3 text-white bg-gray-600 p-2 rounded-xl">
               {durationMessage}
             </span>
-            <span className='mr-3 text-white bg-gray-600 p-2 rounded-xl'>
+            <span className="mr-3 text-white bg-gray-600 p-2 rounded-xl">
               {formattedStartDate}-{formattedEndDate}
             </span>
           </p>
           <span>작성자: 원숭이</span> {/* 작성자 표시 */}
         </div>
 
-        <Card className='mt-10 py-4'>
-          <CardHeader className='pb-0 pt-2 px-4 flex-col'>
-            <p className='py-5 text-xl font-bold'>챌린지 소개</p>
+        <Card className="mt-10 py-4">
+          <CardHeader className="pb-0 pt-2 px-4 flex-col">
+            <p className="py-5 text-xl font-bold">챌린지 소개</p>
           </CardHeader>
-          <CardBody className='overflow-visible py-2'>
-            <div className='flex flex-col items-center'>
+          <CardBody className="overflow-visible py-2">
+            <div className="flex flex-col items-center">
               <Image
-                alt='섬네일'
-                className='object-cover rounded-xl'
+                alt="섬네일"
+                className="object-cover rounded-xl"
                 src={challenge.thumbnail}
                 width={550}
                 height={550}
               />
-              <div className='mt-10 ml-16 mt-16 mr-16 mb-12'>
+              <div className="mt-10 ml-16 mt-16 mr-16 mb-12">
                 {challenge.etc}
               </div>
             </div>
