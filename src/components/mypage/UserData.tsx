@@ -1,20 +1,19 @@
-import React from "react";
-
+import React from 'react';
+import bonobo from '../../../public/bonobo.jpeg';
 export type UserDataProps = {
-  id: string;
   name: string;
-  url: string;
+  bonobo: File;
+  nickname: string;
+  email: string;
 };
 
-const UserData: React.FC<UserDataProps> = ({ id, name, url }) => {
+const UserData: React.FC<UserDataProps> = () => {
   return (
     <div>
-      <div>
-        <figure className="flex flex-col items-center gap-8 mt-8">
-          <img src={`${url}`} alt="유저이미지" width={150} height={150} />
-          <p>{name || "유저이름"}</p>
-        </figure>
-      </div>
+      <figure className='flex flex-col items-center gap-8 mt-8'>
+        <img src={bonobo} alt='유저이미지' width={150} height={150} />
+        <p>{name || '유저이름'}</p>
+      </figure>
     </div>
   );
 };

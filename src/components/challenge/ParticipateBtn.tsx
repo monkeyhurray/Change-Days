@@ -1,7 +1,7 @@
-"use client";
-import { supabase } from "@/supabase/supabase";
-import { User } from "@supabase/supabase-js";
-import React, { useEffect, useState } from "react";
+'use client';
+import { supabase } from '@/supabase/supabase';
+import { User } from '@supabase/supabase-js';
+import React, { useEffect, useState } from 'react';
 
 type props = {
   challengeId: string;
@@ -22,13 +22,13 @@ const ParticipateBtn = ({ challengeId }: props) => {
   const onSubmitHandler = async () => {
     if (userData) {
       const { data, error } = await supabase
-        .from("user_challenges")
+        .from('user_challenges')
         .insert({ challenge_id: challengeId, user_profile_id: userData.id });
 
       if (error) {
-        console.log("참가하기 실패");
+        console.log('참가하기 실패');
       } else {
-        console.log("참가 성공");
+        console.log('참가 성공');
         setIsJoinClick(true);
       }
     }
@@ -36,13 +36,13 @@ const ParticipateBtn = ({ challengeId }: props) => {
 
   async function checkDataExists(challengeId: string, userId: string) {
     const { data, error } = await supabase
-      .from("user_challenges")
-      .select("*")
-      .eq("challenge_id", challengeId)
-      .eq("user_profile_id", userId);
+      .from('user_challenges')
+      .select('*')
+      .eq('challenge_id', challengeId)
+      .eq('user_profile_id', userId);
 
     if (error) {
-      console.error("Error fetching data:", error.message);
+      console.error('Error fetching data:', error.message);
       return false; // or handle the error as needed
     }
     console.log(data);
@@ -64,17 +64,21 @@ const ParticipateBtn = ({ challengeId }: props) => {
       {isLoading && (
         <div>
           {isExistData ? (
-            <p className="text-center font-bold">참가중인 챌린지입니다</p>
+            <p className='mt-10 text-center font-bold '>
+              참가 중인 챌린지입니다
+            </p>
           ) : (
-            <div onClick={onSubmitHandler} className="text-xl text-center ">
-              <span className="mr-3 text-white bg-black px-5 py-3 rounded-xl cursor-pointer">
+            <div
+              onClick={onSubmitHandler}
+              className='mt-10 text-xl text-center'
+            >
+              <span className='mr-3 text-white bg-black px-5 py-3 rounded-xl cursor-pointer'>
                 참가하기
               </span>
             </div>
           )}
         </div>
       )}
-      s
     </>
   );
 };

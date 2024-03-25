@@ -63,7 +63,7 @@ const SignUpPage = () => {
         const { error: insertError } = await supabase.from('users').insert([
           {
             uid: data.user.id,
-            nickname: '원숭이',
+            nickname: '원숭이의사람되기',
             email: data.user.email,
           },
         ]);
