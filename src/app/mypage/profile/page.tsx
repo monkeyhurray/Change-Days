@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "@/supabase/supabase";
 import { useRouter } from "next/navigation";
-import { url } from "inspector";
 
 const ProfilePage = () => {
   const [user, setUser] = useState<any | null>(null);
@@ -24,12 +23,18 @@ const ProfilePage = () => {
     }
   };
 
-  const updateNickname = async ({ nickname }: { nickname: string }) => {
+  const updateNickname = async ({
+    url,
+    nickname,
+  }: {
+    url: string;
+    nickname: string;
+  }) => {
     const { data } = await supabase.auth.getUser();
     console.log(nickname);
     const { error } = await supabase
       .from("users")
-      .update({ nickname })
+      .update({ url, nickname })
       .eq("uid", data.user?.id);
     if (error) {
       console.error(error);
@@ -72,6 +77,7 @@ const ProfilePage = () => {
       handleUpdateUser(name, user.url);
     }
   };
+
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -88,8 +94,7 @@ const ProfilePage = () => {
 
   const onClickChangeBtn = () => {
     setUsetNickname("");
-    updateNickname({ nickname: userNickname });
-    fetchUserData({ data: url });
+    updateNickname({ url: imageUrl!, nickname: userNickname });
     router.replace("/mypage");
   };
 
