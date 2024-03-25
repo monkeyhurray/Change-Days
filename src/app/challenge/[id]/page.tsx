@@ -44,7 +44,7 @@ const ChallengePage = ({ params }: Props) => {
         .from("challenges")
         .select(
           `*,
-           id, name, public, start_date, end_date, thumbnail, etc, created_by, created_at`
+           id, name, start_date, end_date, thumbnail, etc, created_by, created_at`
         )
         .eq("id", id)
         .single();
