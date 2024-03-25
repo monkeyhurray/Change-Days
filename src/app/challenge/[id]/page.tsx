@@ -21,10 +21,6 @@ const ChallengePage = ({ params }: Props) => {
   const [durationMessage, setDurationMessage] = useState<string>("");
   const [formattedStartDate, setFormattedStartDate] = useState<string>("");
   const [formattedEndDate, setFormattedEndDate] = useState<string>("");
-  const [prevImage, setPrevImage] = useState("");
-  const [uploadImg, setUploadImg] = useState<File | null>(null);
-
-  const fileRef = useRef<HTMLInputElement>(null);
 
   const fetchUserData = async () => {
     const { data, error } = await supabase.auth.getUser();
@@ -52,22 +48,6 @@ const ChallengePage = ({ params }: Props) => {
         )
         .eq("id", id)
         .single();
-
-      // const { data, error } = await supabase.auth.signUp({
-      //   email,
-      //   password,
-      // });
-
-      // console.log('회원가입 처리 후, 확인 데이터 => ', data.user);
-
-      // if (data.user && data.user.id) {
-      //   const { error: insertError } = await supabase.from('users').insert([
-      //     {
-      //       uid: data.user.id,
-      //       nickname: '원숭이',
-      //       email: data.user.email,
-      //     },
-      //   ]);
 
       if (challengeError) {
         console.error(
@@ -115,28 +95,6 @@ const ChallengePage = ({ params }: Props) => {
     fetchUserData();
   }, [id]);
 
-  const readImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
-
-    const imageFile = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (event: ProgressEvent<FileReader>) => {
-      if (!event || !event.target) return;
-      if (typeof event.target.result !== "string" || !fileRef.current) return;
-
-      fileRef.current.src = event.target.result as string;
-    };
-    setUploadImg(imageFile);
-
-    reader.readAsDataURL(imageFile);
-    return new Promise((resolve) => {
-      reader.onload = () => {
-        setPrevImage(reader.result as string);
-      };
-    });
-  };
-
   if (!challenge) {
     return <div>챌린지 정보를 불러오는 중입니다...</div>;
   }
@@ -166,7 +124,7 @@ const ChallengePage = ({ params }: Props) => {
               <Image
                 alt="섬네일"
                 className="object-cover rounded-xl"
-                src={challenge.thumbnail}
+                src={challenge.thumbnail as string}
                 width={550}
                 height={550}
               />

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { supabase } from '@/supabase/supabase';
-import { useParams, useRouter } from 'next/navigation';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { supabase } from "@/supabase/supabase";
+import { useParams, useRouter } from "next/navigation";
+import { ChangeEvent, useEffect, useState } from "react";
 
 const ChallengePage = () => {
   const router = useRouter();
@@ -16,9 +16,9 @@ const ChallengePage = () => {
 
       const { data: userChallengeData, error: userChallengeError } =
         await supabase
-          .from('user_challenges')
-          .select('id')
-          .eq('challenge_id', challengeId)
+          .from("user_challenges")
+          .select("id")
+          .eq("challenge_id", challengeId)
           .single();
 
       if (userChallengeError) {
@@ -28,9 +28,9 @@ const ChallengePage = () => {
 
       const { data: fulfillmentsData, error: fulfillmentsError } =
         await supabase
-          .from('user_fulfill')
-          .select('*')
-          .eq('user_challenge_id', userChallengeData.id);
+          .from("user_fulfill")
+          .select("*")
+          .eq("user_challenge_id", userChallengeData.id);
 
       if (fulfillmentsError) {
         console.error(fulfillmentsError);
@@ -50,19 +50,19 @@ const ChallengePage = () => {
     if (!file) return;
 
     const { error, data } = await supabase.storage
-      .from('images')
+      .from("images")
       .upload(`challenge/${file.name}`, file);
 
     if (error) {
       alert(`업로드 실패: ${error.message}`);
     } else {
-      alert('업로드 성공!');
+      alert("업로드 성공!");
 
       const { data: userChallengeData, error: userChallengeError } =
         await supabase
-          .from('user_challenges')
-          .select('id')
-          .eq('challenge_id', challengeId)
+          .from("user_challenges")
+          .select("id")
+          .eq("challenge_id", challengeId)
           .single();
 
       if (userChallengeError) {
@@ -71,7 +71,7 @@ const ChallengePage = () => {
       }
 
       const { error: fulfillError } = await supabase
-        .from('user_fulfill')
+        .from("user_fulfill")
         .insert([
           {
             user_challenge_id: userChallengeData.id,
@@ -79,7 +79,7 @@ const ChallengePage = () => {
             isdone: true,
           },
         ]);
-      console.log('ddds', userChallengeData);
+      console.log("ddds", userChallengeData);
 
       if (fulfillError) {
         console.error(fulfillError);
@@ -99,10 +99,10 @@ const ChallengePage = () => {
         <h2> 참여도 </h2>
         <ul>
           {fulfillments.length > 0 ? (
-            fulfillments.map((fulfillment, index) => (
+            fulfillments.map((fulfillment: any, index: any) => (
               <li key={index}>
-                Date: {fulfillment.date}, Completed:{' '}
-                {fulfillment.isdone ? 'Yes' : 'No'}
+                Date: {fulfillment.date}, Completed:{" "}
+                {fulfillment.isdone ? "Yes" : "No"}
               </li>
             ))
           ) : (
@@ -111,7 +111,7 @@ const ChallengePage = () => {
         </ul>
       </div>
       <div>
-        <input type='file' onChange={handleFileUpload}></input>
+        <input type="file" onChange={handleFileUpload}></input>
       </div>
     </div>
   );
