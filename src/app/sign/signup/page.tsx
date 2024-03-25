@@ -44,7 +44,12 @@ const SignUpPage = () => {
   const handleSubmitSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (email.length === 0 || password.length === 0) {
+    if (
+      email.length === 0 ||
+      password.length === 0 ||
+      !emailValid ||
+      !pwValid
+    ) {
       setError('모든 입력칸을 올바르게 작성해주세요.');
       return;
     }
