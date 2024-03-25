@@ -60,10 +60,8 @@ const ChallengeCard = ({
           </section>
           <section>설명:{challenge.etc}</section>
           <section>생성날짜:{formattedCreatedAt}</section>
-          <section>ㅇㅇ:</section>
           <section>
             기간:{challenge.start_date}~{challenge.end_date}
-            기간:{formatStartDate} ~ {formatEndDate}
           </section>
         </div>
       </div>
