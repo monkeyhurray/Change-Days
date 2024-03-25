@@ -5,14 +5,14 @@ import { supabase } from "@/supabase/supabase";
 import { useInView } from "react-intersection-observer";
 import ChallengeCard from "@/components/searchPage/ChallengeCard";
 import useSearchStore from "@/store/store";
-import { ChallengeListRow } from "../page";
+import { ChallengeRow } from "@/components/searchPage/ChallengeCard";
+
 const SearchPage = () => {
   const [searchItem, setSearchItem] = useState("");
   const { ref, inView } = useInView();
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const [searchClicked, setSearchClicked] = useState(false);
   const [debouncedSearchItem, setDebouncedSearchItem] = useState("");
-  const { searchText, setSearchText } = useSearchStore((state) => state);
+  const { searchText } = useSearchStore((state) => state);
   const resetText = useSearchStore((state) => state.resetText);
 
   const {
@@ -21,18 +21,19 @@ const SearchPage = () => {
     isFetchingNextPage,
     hasNextPage,
   } = useInfiniteQuery({
+    //
     queryKey: ["challenges", debouncedSearchItem],
     queryFn: async ({ pageParam }: { pageParam: number }) => {
       let supabaseTableData = supabase
         .from("challenges")
         .select("*")
         .order("created_at");
-      if (searchClicked === false) {
-        supabaseTableData = supabaseTableData.ilike("name", `%${searchItem}%`);
-      }
-      if (searchText) {
-        supabaseTableData = supabaseTableData.ilike("name", `%${searchText}%`);
-      }
+
+      supabaseTableData = supabaseTableData.ilike("name", `%${searchItem}%`);
+
+      // if (searchText) {
+      //   supabaseTableData = supabaseTableData.ilike("name", `%${searchText}%`);
+      // }
       const { data: supabaseData, error } = await supabaseTableData.range(
         (pageParam - 1) * 10,
         pageParam * 10 - 1
@@ -41,6 +42,7 @@ const SearchPage = () => {
       if (error) {
         throw new Error(error.message);
       }
+      console.log("supabaseData", supabaseData);
 
       return { supabaseData, nextPage: pageParam + 1 };
     },
@@ -62,34 +64,26 @@ const SearchPage = () => {
 
   useEffect(() => {
     if (inView && hasNextPage) {
-      console.log("inView", inView);
-      console.log("hasNextPage", hasNextPage);
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
   useEffect(() => {
     resetText();
-  }, []);
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setDebouncedSearchItem(searchItem);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [searchItem]);
-
-  useEffect(() => {
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, []);
 
   useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearchItem(searchItem);
+    }, 500);
     if (searchText && !searchItem) {
-      setSearchItem(searchText); // searchText 값이 있고 searchItem이 비어있을 때만 넣어줌
+      setSearchItem(searchText);
     }
-  }, [searchText, searchItem]);
+    return () => clearTimeout(timeoutId);
+  }, [searchItem, searchText]);
 
   return (
     <div className="bg-white flex justify-center min-w-full min-h-full py-32">
@@ -104,7 +98,7 @@ const SearchPage = () => {
             className="px-4 py-2 min-w-full mr-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
           />
         </form>
-        <div className="flex pb-14 pt-20 justify-center">
+        <div className="flex pb-24 pt-32 justify-center">
           <div className="flex flex-wrap justify-center gap-8">
             {infiniteData?.pages.map((page) => page.supabaseData)[0].length !==
             0 ? (
