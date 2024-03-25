@@ -220,24 +220,7 @@ const CreateChallengePage = () => {
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <div className="flex">
-          <Button
-            color={open ? "primary" : "default"}
-            className="mr-2"
-            variant={open ? "solid" : "ghost"}
-            onClick={() => setOpen(true)}
-          >
-            공개
-          </Button>
-          <Button
-            color={open ? "default" : "primary"}
-            className="mr-2"
-            variant={open ? "ghost" : "solid"}
-            onClick={() => setOpen(false)}
-          >
-            비공개
-          </Button>
-        </div>
+
         <h1 className="mb-3 mt-4">챌린지 기간:&nbsp;</h1>
         <div className="mb-3 mt-1 flex">
           {periodArr.map((item) => {
